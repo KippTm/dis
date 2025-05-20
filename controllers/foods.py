@@ -6,7 +6,7 @@ from models.user import User
 def create_recipe(author, recipe_name, ingredients):
     recipe = Recipe(author, recipe_name)
     for ingredient in ingredients:
-        food = Food(ingredient["name"], ingredient["amount"], ingredient["emission"])
+        food = Food(ingredient[0], ingredient[1], ingredient[2], ingredient[3], ingredient[4]) # matches food schema
         recipe.add_ingredient(food)
     return recipe.save()
 
