@@ -19,6 +19,14 @@ class User:
             WHERE author = :author AND recipe_name = :recipe_name
         """
         result = db.session.execute(text(query), {"author": self.username, "recipe_name": f"%{recipe_name}%"})
+        return result.fetchone()
+
+    def get_recipes(self, recipe_name):
+        query = """
+            SELECT * FROM Recipe
+            WHERE author = :author
+        """
+        result = db.session.execute(text(query), {"author": self.username, "recipe_name": f"%{recipe_name}%"})
         return result.fetchall()
 
         # returns a bool to check for 
