@@ -9,7 +9,7 @@ class Recipe:
         self.recipe_name = recipe_name
         
     # save into both tables Recipe and Recipe_Content
-    def save_recipe(self):
+    def save(self):
         try:
             insert_recipe_query = """
                 INSERT INTO Recipe (author, recipe_name) VALUES (:author, :recipe_name)
