@@ -1,6 +1,6 @@
 from sqlalchemy import text
 from models.food import Food
-from app import db
+from db import db
 
 class Recipe:
     def __init__(self, author, recipe_name):
