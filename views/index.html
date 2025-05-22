@@ -1,16 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head> 
-        <title>DIS project</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <title>Recipe Site</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md py-4 px-6 flex justify-end space-x-4">
+        <form action="/new_recipe" method="GET">
+            <button
+                type="submit"
+                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+            >
+                Add Recipe
+            </button>
+        </form>
+        <form action="/find_recipe" method="GET">
+            <button
+                type="submit"
+                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+            >
+                Find Recipe
+            </button>
+        </form>
+        <form action="/profile" method="GET">
+            <button
+                type="submit"
+                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+            >
+                Profile
+            </button>
+        </form>
+    </nav>
 
-    <body>
-        <h1>Food Site</h1>
-        <h2>Welcome</h2>
-    </body>
-
+    <!-- Main content -->
+    <main class="flex-grow flex flex-col items-center justify-center text-center px-4">
+        <h1 class="text-4xl md:text-5xl font-bold text-green-600 mb-4">Recipe Site</h1>
+        <p class="text-gray-700 text-lg md:text-xl">
+            Calculate the CO<sup>2</sup> impact of your recipes
+        </p>
+    </main>
+</body>
 </html>
-
 
