@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from client import db
+from app import db
 
 # in ui when adding a food to a recipe, the user should speficy the amount in grams as well
 class Food:

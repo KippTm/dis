@@ -1,5 +1,5 @@
 from sqlalchemy import text
-from client import db
+from app import db
 from models.food import Food
 from models.recipe import Recipe
 

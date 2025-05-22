@@ -1,0 +1,506 @@
+﻿ID_Ra;Produkt;Kategori;Total kg CO2e/kg
+Ra00001;Peberfrugt;Grøntsager og grøntsagsprodukter;1.07
+Ra00002;Tomat;Grøntsager og grøntsagsprodukter;0.48
+Ra00003;Squash;Grøntsager og grøntsagsprodukter;0.84
+Ra00004;Aubergine;Grøntsager og grøntsagsprodukter;0.99
+Ra00005;Tomat, soltørret;Grøntsager og grøntsagsprodukter;2.72
+Ra00006;Græskar;Grøntsager og grøntsagsprodukter;0.84
+Ra00007;Agurk;Grøntsager og grøntsagsprodukter;0.40
+Ra00008;Drueagurk (sylteagurk);Grøntsager og grøntsagsprodukter;0.40
+Ra00009;Peber, chili;Grøntsager og grøntsagsprodukter;1.07
+Ra00010;Oksekød, inderlår uden kappe;Kød og fjerkræ;67.82
+Ra00011;Oksekød, mørbrad, afpudset;Kød og fjerkræ;227.85
+Ra00012;Oksekød, hakket, 10-15% fedt;Kød og fjerkræ;48.04
+Ra00013;Oksekød, culotte;Kød og fjerkræ;67.82
+Ra00014;Oksekød, hakket, 15-20% fedt;Kød og fjerkræ;45.47
+Ra00015;Oksekød, tyndsteg med mørbrad;Kød og fjerkræ;120.83
+Ra00016;Oksekød, hakket, 5-10% fedt;Kød og fjerkræ;50.61
+Ra00017;Øl, pilsner, 4.4 % vol., dåse;Vin, øl og spiritus;0.68
+Ra00018;Øl, letøl, 1.7 % vol., dåse;Vin, øl og spiritus;0.68
+Ra00019;Øl, stærk, 7.6 % vol., dåse;Vin, øl og spiritus;0.68
+Ra00020;Kiks, Marie;Brød og bageartikler;2.93
+Ra00021;Kiks, fuldkorns-, digestivetype;Brød og bageartikler;2.82
+Ra00022;Småkage, hvede, traditionelle danske, industrifremstillet;Brød og bageartikler;3.23
+Ra00023;Småkage, cookie (amerikansk type), industrifremstillet;Brød og bageartikler;2.82
+Ra00024;Müslibar;Korn og kornprodukter;4.75
+Ra00025;Vaffelrør;Brød og bageartikler;2.74
+Ra00026;Rasp;Brød og bageartikler;1.84
+Ra00027;Knækbrød, rug, groft;Brød og bageartikler;1.62
+Ra00028;Hvedebrød, toastbrød, fint, industrifremstillet;Brød og bageartikler;1.16
+Ra00029;Pølsebrød;Brød og bageartikler;1.16
+Ra00030;Grovbolle;Brød og bageartikler;1.16
+Ra00031;Rugbrød, fuldkorn, industrifremstillet;Brød og bageartikler;1.02
+Ra00032;Rugbrødskrymmel/ymerdrys;Brød og bageartikler;2.21
+Ra00033;Cornflakes;Korn og kornprodukter;2.39
+Ra00034;Müsli;Korn og kornprodukter;2.31
+Ra00035;Morgenmadsprodukt, Guldkorn;Korn og kornprodukter;2.68
+Ra00036;Morgenmadsprodukt, Havrefras;Korn og kornprodukter;2.06
+Ra00037;Smør, saltet;Mælk, mejeriprodukter og æg;3.30
+Ra00038;Smørbart blandingsprodukt, 75% fedt;Mælk, mejeriprodukter og æg;3.21
+Ra00039;Skærekage, chokoladekage;Brød og bageartikler;2.32
+Ra00040;Wienerbrød, kanelsnegl;Brød og bageartikler;1.90
+Ra00041;Skærekage, formkage;Brød og bageartikler;2.32
+Ra00042;Flødeskumskage, lagkagesnitte;Brød og bageartikler;2.32
+Ra00043;Kage, trøffelprodukt / koldprodukt, industrifremstillet;Brød og bageartikler;3.67
+Ra00044;Grisekød, bacon, stegestykke;Kød og fjerkræ;6.43
+Ra00045;Grisekød, spegepølse, salami;Kød og fjerkræ;5.70
+Ra00046;Grisekød, skinke, kogt, pålæg;Kød og fjerkræ;4.28
+Ra00047;Oksekød, roastbeef, pålæg;Kød og fjerkræ;67.91
+Ra00048;Grisekød, medisterpølse;Kød og fjerkræ;2.76
+Ra00049;Grisekød, leverpostej;Kød og fjerkræ;3.96
+Ra00050;Grisekød, rullepølse, pålæg;Kød og fjerkræ;4.28
+Ra00051;Grisekød, pølse bratwurst;Kød og fjerkræ;2.16
+Ra00052;Kylling, bryst (filet), kogt, pålæg;Kød og fjerkræ;4.78
+Ra00053;Kylling, ben, kød og skind;Kød og fjerkræ;1.98
+Ra00054;Kylling, lår, kød og skind;Kød og fjerkræ;1.88
+Ra00055;Kylling, bryst, kød og skind;Kød og fjerkræ;5.20
+Ra00056;Kylling, pølse, pålæg;Kød og fjerkræ;1.93
+Ra00057;Kylling, høne, kød og skind;Kød og fjerkræ;3.27
+Ra00058;Te, blade;Drikkevarer;16.71
+Ra00059;Kaffe, instant, pulver;Drikkevarer;17.28
+Ra00060;Kaffe, bønner, ristet, formalet;Drikkevarer;6.90
+Ra00061;Kakao, instant, uden mælk, pulver;Drikkevarer;17.30
+Ra00062;Kakao, pulver;Drikkevarer;17.30
+Ra00063;Lammekød, rullepølse, lammekød, pålæg;Kød og fjerkræ;32.77
+Ra00064;Oksekød, spegepølse;Kød og fjerkræ;49.16
+Ra00065;Grisekød, hamburgerryg, kogt;Kød og fjerkræ;4.28
+Ra00066;Dressing, olie-eddike;Smagsgivere og krydderier;3.43
+Ra00067;Dressing, thousand island;Smagsgivere og krydderier;3.11
+Ra00068;Vand, postevand;Drikkevarer;0.00
+Ra00069;And, kød;Kød og fjerkræ;3.27
+Ra00070;Gås, kød;Kød og fjerkræ;3.27
+Ra00071;Makrelsalat, mayonnaise;Smagsgivere og krydderier;2.34
+Ra00072;Sennep dild sauce;Smagsgivere og krydderier;1.86
+Ra00073;Italiensk salat, mayonnaise;Smagsgivere og krydderier;3.13
+Ra00074;Karrysalat, mayonnaise;Smagsgivere og krydderier;3.13
+Ra00075;Yoghurt naturel, sødmælk;Mælk, mejeriprodukter og æg;0.73
+Ra00076;Creme fraiche 18 %;Mælk, mejeriprodukter og æg;1.57
+Ra00077;Skyr, 0.2 % fedt;Mælk, mejeriprodukter og æg;1.03
+Ra00078;Danbo ost, 45+;Mælk, mejeriprodukter og æg;5.41
+Ra00079;Parmesan ost, 32+;Mælk, mejeriprodukter og æg;5.41
+Ra00080;Mozzarella ost, 30+;Mælk, mejeriprodukter og æg;5.41
+Ra00081;Sild, marineret;Fisk og skaldyr;5.35
+Ra00082;Fiskeboller, konserves;Fisk og skaldyr;2.19
+Ra00083;Fiskefars;Fisk og skaldyr;2.84
+Ra00084;Torsk, lever, konserves;Fisk og skaldyr;9.03
+Ra00085;Torskerogn, konserves;Fisk og skaldyr;4.24
+Ra00086;Rejer, konserves;Fisk og skaldyr;9.71
+Ra00087;Torsk, filet, paneret;Fisk og skaldyr;2.41
+Ra00088;Kaviar, stenbiderrogn;Fisk og skaldyr;4.16
+Ra00089;Fiskefrikadelle;Fisk og skaldyr;3.35
+Ra00090;Torskelever, røget;Fisk og skaldyr;3.58
+Ra00091;Torskelever;Fisk og skaldyr;2.81
+Ra00092;Hummer, konserves;Fisk og skaldyr;6.35
+Ra00093;Musling, konserves;Fisk og skaldyr;1.69
+Ra00094;Tun i tomat, konserves;Fisk og skaldyr;4.48
+Ra00095;Torskerogn;Fisk og skaldyr;4.15
+Ra00096;Krabbekløer;Fisk og skaldyr;9.77
+Ra00097;Kaviar, lodderogn;Fisk og skaldyr;4.15
+Ra00098;Tun i vand, konserves;Fisk og skaldyr;4.03
+Ra00099;Hellefisk, røget;Fisk og skaldyr;2.69
+Ra00100;Fiskefilet, paneret, friturestegt;Fisk og skaldyr;2.71
+Ra00101;Fiskepinde, panerede, dybfrost;Fisk og skaldyr;2.37
+Ra00102;Rugmel, groft, fuldkorn;Korn og kornprodukter;1.17
+Ra00103;Hvedemel, grahamsmel, fuldkorn;Korn og kornprodukter;1.24
+Ra00104;Rugkerner, hele/knækkede;Korn og kornprodukter;1.17
+Ra00105;Hvedekerner, hele/knækkede;Korn og kornprodukter;1.24
+Ra00106;Rismel;Korn og kornprodukter;5.12
+Ra00107;Majsmel;Korn og kornprodukter;1.61
+Ra00108;Æg, skrabeæg;Mælk, mejeriprodukter og æg;0.97
+Ra00109;Knude;Fisk og skaldyr;7.14
+Ra00110;Aborre;Fisk og skaldyr;4.08
+Ra00111;Sandart;Fisk og skaldyr;3.67
+Ra00112;Gedde;Fisk og skaldyr;3.67
+Ra00113;Brasen;Fisk og skaldyr;8.03
+Ra00114;Bækforel;Fisk og skaldyr;6.91
+Ra00115;Havørred;Fisk og skaldyr;1.33
+Ra00116;Helt;Fisk og skaldyr;7.14
+Ra00117;Frugtsaft, blandet, sødet, koncentreret, plastflaske;Drikkevarer;2.52
+Ra00118;Hyldebærsaft, koncentreret, plastflaske;Drikkevarer;4.00
+Ra00119;Oliven, grønne, marinerede, konserves;Grøntsager og grøntsagsprodukter;2.05
+Ra00120;Pære, konserves;Frugt og frugtprodukter;0.95
+Ra00121;Nøddepasta med cacao, smørepålæg;Planteprodukter og -drikke;5.16
+Ra00122;Appelsinjuice, plastflaske;Drikkevarer;1.49
+Ra00123;Ananas, konserves;Frugt og frugtprodukter;1.13
+Ra00124;Jordbærsyltetøj;Frugt og frugtprodukter;2.21
+Ra00125;Rosiner, uden kerner;Frugt og frugtprodukter;3.58
+Ra00126;Hindbærmarmelade;Frugt og frugtprodukter;2.21
+Ra00127;Hare, kød;Kød og fjerkræ;3.27
+Ra00128;Kanin, kød;Kød og fjerkræ;3.27
+Ra00129;Fasan, kød og skind;Kød og fjerkræ;3.27
+Ra00130;Due, vildt, kød og skind;Kød og fjerkræ;3.27
+Ra00131;Byggryn;Korn og kornprodukter;1.78
+Ra00132;Havregryn, ikke beriget;Korn og kornprodukter;1.94
+Ra00133;Risengryn, grødris, polerede;Korn og kornprodukter;5.09
+Ra00134;Persille;Grøntsager og grøntsagsprodukter;0.45
+Ra00135;Dild;Grøntsager og grøntsagsprodukter;0.45
+Ra00136;Hvidløg;Grøntsager og grøntsagsprodukter;1.25
+Ra00137;Purløg;Grøntsager og grøntsagsprodukter;0.43
+Ra00138;Karse;Grøntsager og grøntsagsprodukter;0.45
+Ra00139;Oliven, sorte, uden sten, i saltlage;Grøntsager og grøntsagsprodukter;2.05
+Ra00140;Hasselnød, tørret;Nødder og frø;6.95
+Ra00141;Solsikkefrø, afskallede, tørrede;Nødder og frø;3.13
+Ra00142;Sesamfrø, afskallede;Nødder og frø;7.30
+Ra00143;Valnødder, tørret;Nødder og frø;5.69
+Ra00144;Cashewnødder, tørristet;Nødder og frø;12.47
+Ra00145;Græskarkerner, tørret;Nødder og frø;5.69
+Ra00146;Honning;Smagsgivere og krydderier;0.81
+Ra00147;Mælkeis;Mælk, mejeriprodukter og æg;2.71
+Ra00148;Flødeis;Mælk, mejeriprodukter og æg;2.71
+Ra00149;Ispind, limonade;Frugt og frugtprodukter;1.25
+Ra00150;Eddike;Smagsgivere og krydderier;1.58
+Ra00151;Salt, bordsalt (jodberiget);Smagsgivere og krydderier;0.44
+Ra00152;Rabarber;Grøntsager og grøntsagsprodukter;0.38
+Ra00153;Bladselleri;Grøntsager og grøntsagsprodukter;0.38
+Ra00154;Blomkål;Grøntsager og grøntsagsprodukter;0.63
+Ra00155;Broccoli;Grøntsager og grøntsagsprodukter;0.63
+Ra00156;Grønkål;Grøntsager og grøntsagsprodukter;0.29
+Ra00157;Hvidkål;Grøntsager og grøntsagsprodukter;0.29
+Ra00158;Rosenkål;Grøntsager og grøntsagsprodukter;0.29
+Ra00159;Rødkål;Grøntsager og grøntsagsprodukter;0.29
+Ra00160;Spidskål;Grøntsager og grøntsagsprodukter;0.29
+Ra00161;Spinat;Grøntsager og grøntsagsprodukter;0.48
+Ra00162;Artiskok;Grøntsager og grøntsagsprodukter;0.98
+Ra00163;Asparges, grøn;Grøntsager og grøntsagsprodukter;1.08
+Ra00164;Salat, Iceberg;Grøntsager og grøntsagsprodukter;0.46
+Ra00165;Salat, egeløv;Grøntsager og grøntsagsprodukter;0.46
+Ra00166;Bok choy, pak choi eller pok choi;Grøntsager og grøntsagsprodukter;0.29
+Ra00167;Savoykål;Grøntsager og grøntsagsprodukter;0.29
+Ra00168;Blomkål, dybfrost;Grøntsager og grøntsagsprodukter;0.82
+Ra00169;Porre;Grøntsager og grøntsagsprodukter;0.43
+Ra00170;Spinat, hakket, dybfrost;Grøntsager og grøntsagsprodukter;0.64
+Ra00171;Broccoli, dybfrost;Grøntsager og grøntsagsprodukter;0.82
+Ra00172;Voksbønner;Bælgfrugter og bælgfrugtprodukter;0.95
+Ra00173;Grønne ærter;Grøntsager og grøntsagsprodukter;1.27
+Ra00174;Grønne linser, tørrede;Bælgfrugter og bælgfrugtprodukter;3.08
+Ra00175;Kikærter, tørrede;Bælgfrugter og bælgfrugtprodukter;3.60
+Ra00176;Grønne bønner, haricot verts;Grøntsager og grøntsagsprodukter;0.95
+Ra00177;Bønnespirer, mung;Grøntsager og grøntsagsprodukter;0.95
+Ra00178;Bønnespirer;Grøntsager og grøntsagsprodukter;0.95
+Ra00179;Sukkerært (mangetout);Grøntsager og grøntsagsprodukter;1.34
+Ra00180;Sojabønner, tørrede;Bælgfrugter og bælgfrugtprodukter;1.84
+Ra00181;Grønne ærter, dybfrost;Grøntsager og grøntsagsprodukter;1.62
+Ra00182;Mineralvand, danskvand, glasflaske;Drikkevarer;0.19
+Ra00183;Mineralvand, sodavand, tilsat sukker, uspec.;Drikkevarer;0.59
+Ra00184;Æblemost, plastflaske;Drikkevarer;1.68
+Ra00185;Sherry, tør;Vin, øl og spiritus;2.91
+Ra00186;Likør, kaffe med fløde;Vin, øl og spiritus;3.56
+Ra00187;Margarine, 70 %, bordbrug, blød, vegetabilsk fedt;Planteprodukter og -drikke;2.49
+Ra00188;Hornfisk;Fisk og skaldyr;2.63
+Ra00189;Laks, atlantisk, vild;Fisk og skaldyr;2.09
+Ra00190;Makrel;Fisk og skaldyr;1.98
+Ra00191;Rødspætte;Fisk og skaldyr;2.81
+Ra00192;Sild;Fisk og skaldyr;2.23
+Ra00193;Mørksej;Fisk og skaldyr;2.81
+Ra00194;Torsk, filet;Fisk og skaldyr;2.81
+Ra00195;Rødspætte, filet, paneret, dybfrost;Fisk og skaldyr;2.45
+Ra00196;Sej, filet, dybfrost;Fisk og skaldyr;2.71
+Ra00197;Tun;Fisk og skaldyr;3.10
+Ra00198;Laks, atlantisk, opdræt, koldrøget;Fisk og skaldyr;2.78
+Ra00199;Laks, atlantisk, opdræt, varmrøget;Fisk og skaldyr;3.08
+Ra00200;Laks, atlantisk, opdræt;Fisk og skaldyr;2.09
+Ra00201;Mayonnaise, fedtreduceret;Smagsgivere og krydderier;1.17
+Ra00202;Mayonnaise;Smagsgivere og krydderier;3.13
+Ra00203;Remoulade, uspec.;Smagsgivere og krydderier;1.86
+Ra00204;Østers;Fisk og skaldyr;0.84
+Ra00205;Musling;Fisk og skaldyr;0.19
+Ra00206;Blæksprutte;Fisk og skaldyr;0.38
+Ra00207;Champignon;Svampe og svampeprodukter;0.38
+Ra00208;Østershat;Svampe og svampeprodukter;0.38
+Ra00209;Mandeldrik, ikke beriget;Planteprodukter og -drikke;0.53
+Ra00210;Risdrik, tilsat calcium;Planteprodukter og -drikke;1.40
+Ra00211;Havredrik, tilsat calcium;Planteprodukter og -drikke;0.40
+Ra00212;Sojadrik, tilsat calcium;Planteprodukter og -drikke;0.46
+Ra00213;Bouillon, hønsekød, spiseklar;Smagsgivere og krydderier;0.35
+Ra00214;Kødboller, okse/gris, konserves;Kød og fjerkræ;16.13
+Ra00215;Bouillon, oksekød, spiseklar;Smagsgivere og krydderier;0.55
+Ra00216;Kødboller, okse/gris;Kød og fjerkræ;16.13
+Ra00217;Melboller, uspec.;Korn og kornprodukter;1.33
+Ra00218;Kødboller, okse/gris, dybfrost;Kød og fjerkræ;15.79
+Ra00219;Tomatsuppe, spiseklar;Færdigretter;2.19
+Ra00220;Bouillon, oksekød, koncentreret, terning;Smagsgivere og krydderier;9.94
+Ra00221;Melboller, dybfrost;Korn og kornprodukter;1.37
+Ra00222;Kylling, grillstegt, færdigret;Færdigretter;4.71
+Ra00223;Kylling, nuggets friturestegt, færdigretter;Kød og fjerkræ;4.34
+Ra00224;Pizza med tomat og ost, færdigretter;Færdigretter;2.44
+Ra00225;Pizza med fisk, tomat og ost, færdigretter;Færdigretter;3.63
+Ra00226;Pizza med salami, tomat og ost, færdigretter;Færdigretter;3.04
+Ra00227;Pizza med grønt og frugt, tomat og ost, færdigretter;Færdigretter;2.32
+Ra00228;Pizza med kød, tomat og ost, færdigretter;Færdigretter;4.56
+Ra00229;Pizza med kød og fisk, tomat og ost, færdigretter;Færdigretter;4.10
+Ra00230;Kalv og flæsk, hakket, 15-20% fedt;Kød og fjerkræ;22.04
+Ra00231;Gedemælk;Mælk, mejeriprodukter og æg;2.80
+Ra00232;Marcipan;Brød og bageartikler;12.08
+Ra00233;Sirup;Slik og sukkervarer;1.75
+Ra00234;Pasta;Korn og kornprodukter;2.05
+Ra00235;Æble;Frugt og frugtprodukter;0.61
+Ra00236;Pære;Frugt og frugtprodukter;0.46
+Ra00237;Vindrue;Frugt og frugtprodukter;0.88
+Ra00238;Grisekød, flæskesteg, nakkekam med svær;Kød og fjerkræ;4.64
+Ra00239;Grisekød, skinke, inderlår, afpudset;Kød og fjerkræ;4.64
+Ra00240;Grisekød, filet, afpudset;Kød og fjerkræ;5.53
+Ra00241;Grisekød, mørbrad, afpudset;Kød og fjerkræ;7.32
+Ra00242;Grisekød, hakket, 5-10% fedt;Kød og fjerkræ;3.67
+Ra00243;Grisekød, nakkefilet, afpudset (Nakkekotelet);Kød og fjerkræ;4.69
+Ra00244;Grisekød, hakket, 15-20% fedt;Kød og fjerkræ;3.75
+Ra00245;Millionbøf, uspec., færdigretter;Færdigretter;19.74
+Ra00246;Forloren skildpadde, uspec., færdigretter;Færdigretter;26.36
+Ra00247;Forårsrulle, dybfrost, færdigretter;Færdigretter;3.11
+Ra00248;Grisekød i karrysovs, dybfrost, færdigretter;Færdigretter;4.72
+Ra00249;Pizza romana, dybfrost, færdigretter;Færdigretter;2.70
+Ra00250;Lever, gris, i flødesovs, dybfrost, færdigretter;Færdigretter;2.98
+Ra00251;Pizza napolitana, dybfrost, færdigretter;Færdigretter;2.47
+Ra00252;Forårsrulle, friturestegt, færdigretter;Færdigretter;3.11
+Ra00253;Pizza med broccoli, dybfrost, færdigretter;Færdigretter;2.35
+Ra00254;Pizza med tunfisk, dybfrost, færdigretter;Færdigretter;2.29
+Ra00255;Kødrand, dybfrost, færdigretter;Færdigretter;2.24
+Ra00256;Kartoffel;Grøntsager og grøntsagsprodukter;0.41
+Ra00257;Gulerod;Grøntsager og grøntsagsprodukter;0.27
+Ra00258;Radise;Grøntsager og grøntsagsprodukter;0.45
+Ra00259;Rødbede;Grøntsager og grøntsagsprodukter;0.33
+Ra00260;Selleri, knoldselleri, rod;Grøntsager og grøntsagsprodukter;0.38
+Ra00261;Ingefær, rod;Grøntsager og grøntsagsprodukter;1.27
+Ra00262;Fennikel, knold;Grøntsager og grøntsagsprodukter;0.15
+Ra00263;Majroe;Grøntsager og grøntsagsprodukter;0.27
+Ra00264;Løg, hakkede, dybfrost;Grøntsager og grøntsagsprodukter;0.38
+Ra00265;Gulerod, dybfrost;Grøntsager og grøntsagsprodukter;0.38
+Ra00266;Løg;Grøntsager og grøntsagsprodukter;0.27
+Ra00267;Forårsløg;Grøntsager og grøntsagsprodukter;0.81
+Ra00268;Kassava, maniok;Grøntsager og grøntsagsprodukter;0.70
+Ra00269;Persillerod;Grøntsager og grøntsagsprodukter;0.95
+Ra00270;Feta ost 40+;Mælk, mejeriprodukter og æg;1.60
+Ra00271;Danablu ost 50+;Mælk, mejeriprodukter og æg;5.41
+Ra00272;Lammekød, kølle;Kød og fjerkræ;36.43
+Ra00273;Lammekød, uspec.;Kød og fjerkræ;36.43
+Ra00274;Krebs;Fisk og skaldyr;2.54
+Ra00275;Rejer, dybvands-, kogt, dybfrost;Fisk og skaldyr;8.40
+Ra00276;Hummer;Fisk og skaldyr;2.54
+Ra00277;Krabbe, kogt;Fisk og skaldyr;4.42
+Ra00278;Rejer, sort tiger-, opdræt, kogt, dybfrost;Fisk og skaldyr;10.04
+Ra00279;Rejer, dybvands-, kogt, i lage;Fisk og skaldyr;8.40
+Ra00280;Pop corn, traditionelle;Korn og kornprodukter;1.53
+Ra00281;Peanuts, jordnød, ristet og saltet;Nødder og frø;3.47
+Ra00282;Jordbær;Frugt og frugtprodukter;0.65
+Ra00283;Hindbær;Frugt og frugtprodukter;1.20
+Ra00284;Solbær;Frugt og frugtprodukter;0.80
+Ra00285;Blåbær;Frugt og frugtprodukter;1.22
+Ra00286;Brombær;Frugt og frugtprodukter;1.38
+Ra00287;Hyben;Frugt og frugtprodukter;0.72
+Ra00288;Hyldebær;Frugt og frugtprodukter;1.38
+Ra00289;Ribs;Frugt og frugtprodukter;0.80
+Ra00290;Stikkelsbær;Frugt og frugtprodukter;1.00
+Ra00291;Jordbær, dybfrost, usukrede;Frugt og frugtprodukter;0.60
+Ra00292;Tranebær;Frugt og frugtprodukter;0.79
+Ra00293;Blåbær, frosne, usukrede;Frugt og frugtprodukter;0.99
+Ra00294;Hindbær, dybfrost;Frugt og frugtprodukter;1.34
+Ra00295;Flødeost, ost 60+;Mælk, mejeriprodukter og æg;5.41
+Ra00296;Brie, ost 45+;Mælk, mejeriprodukter og æg;1.60
+Ra00297;Hytteost, ost 20+;Mælk, mejeriprodukter og æg;1.60
+Ra00298;Bulgur, parboiled;Korn og kornprodukter;1.87
+Ra00299;Majs, kerner, konserves;Grøntsager og grøntsagsprodukter;0.69
+Ra00300;Ris, parboiled;Korn og kornprodukter;5.06
+Ra00301;Quinoa, sort;Korn og kornprodukter;4.63
+Ra00302;Peber, sort;Smagsgivere og krydderier;5.19
+Ra00303;Sennep, gul, færdiglavet;Smagsgivere og krydderier;1.95
+Ra00304;Karry, pulver;Smagsgivere og krydderier;6.09
+Ra00305;Bitter, Gammel Dansk Bitter Dram;Vin, øl og spiritus;3.57
+Ra00306;Cognac;Vin, øl og spiritus;5.76
+Ra00307;Vodka;Vin, øl og spiritus;3.57
+Ra00308;Snaps, 40 % vol.;Vin, øl og spiritus;3.57
+Ra00309;Blomme;Frugt og frugtprodukter;0.90
+Ra00310;Kirsebær;Frugt og frugtprodukter;1.20
+Ra00311;Kastanje;Nødder og frø;2.31
+Ra00312;Sveske, tørret;Frugt og frugtprodukter;2.73
+Ra00313;Abrikos, tørret;Frugt og frugtprodukter;2.73
+Ra00314;Abrikos;Frugt og frugtprodukter;0.87
+Ra00315;Fersken;Frugt og frugtprodukter;0.71
+Ra00316;Nektarin;Frugt og frugtprodukter;0.71
+Ra00317;Avocado;Frugt og frugtprodukter;1.22
+Ra00318;Sukker, stødt melis (saccharose);Slik og sukkervarer;2.66
+Ra00319;Sukker, brun farin;Slik og sukkervarer;2.45
+Ra00320;Chokolade, lys/mælk;Slik og sukkervarer;4.99
+Ra00321;Nougat;Brød og bageartikler;5.89
+Ra00322;Tyggegummi, uden sukker, uspec.;Slik og sukkervarer;5.94
+Ra00323;Karameller, blandede;Slik og sukkervarer;2.92
+Ra00324;Chokolade, mørk;Slik og sukkervarer;7.86
+Ra00325;Lakrids, salt;Slik og sukkervarer;2.72
+Ra00326;Vingummi;Slik og sukkervarer;2.68
+Ra00327;Banan;Frugt og frugtprodukter;0.85
+Ra00328;Citron;Frugt og frugtprodukter;0.67
+Ra00329;Vandmelon;Frugt og frugtprodukter;0.40
+Ra00330;Appelsin;Frugt og frugtprodukter;0.56
+Ra00331;Honningmelon;Frugt og frugtprodukter;0.60
+Ra00332;Lime;Frugt og frugtprodukter;0.60
+Ra00333;Ananas;Frugt og frugtprodukter;0.56
+Ra00334;Mango;Frugt og frugtprodukter;1.01
+Ra00335;Grapefrugt;Frugt og frugtprodukter;0.77
+Ra00336;Mandarin;Frugt og frugtprodukter;0.65
+Ra00337;Kiwi;Frugt og frugtprodukter;0.75
+Ra00338;Kalkunkød, bryst (filet), kogt/røget, pålæg;Kød og fjerkræ;4.35
+Ra00339;Kalkunkød;Kød og fjerkræ;4.71
+Ra00340;Kalkunkød, hakket, 5-10% fedt;Kød og fjerkræ;4.68
+Ra00341;Sødmælk, 3.5 % fedt;Mælk, mejeriprodukter og æg;0.50
+Ra00342;Letmælk, 1.5 % fedt;Mælk, mejeriprodukter og æg;0.45
+Ra00343;Minimælk, 0.5 % fedt;Mælk, mejeriprodukter og æg;0.41
+Ra00344;Kakao, skummetmælk, UHT;Mælk, mejeriprodukter og æg;0.73
+Ra00345;Fløde 38 %, piskefløde;Mælk, mejeriprodukter og æg;1.73
+Ra00346;Kalvekød, middelfedt;Kød og fjerkræ;74.84
+Ra00347;Jordnøddesmør;Bælgfrugter og bælgfrugtprodukter;3.83
+Ra00348;Solsikkeolie;Planteprodukter og -drikke;2.79
+Ra00349;Olivenolie;Planteprodukter og -drikke;5.89
+Ra00350;Rapsolie;Planteprodukter og -drikke;3.33
+Ra00351;Løg, ristede;Grøntsager og grøntsagsprodukter;4.25
+Ra00352;Kartoffelchips, grove;Grøntsager og grøntsagsprodukter;4.24
+Ra00353;Tofu, sojabønneost;Bælgfrugter og bælgfrugtprodukter;2.09
+Ra00354;Linsespirer;Grøntsager og grøntsagsprodukter;3.00
+Ra00355;Rødkål, konserves, uden tilsat sukker;Grøntsager og grøntsagsprodukter;0.79
+Ra00356;Tomatjuice, dåse;Drikkevarer;1.06
+Ra00357;Agurk, syltet;Grøntsager og grøntsagsprodukter;3.07
+Ra00358;Kartoffelmos, pulver med tørmælk;Grøntsager og grøntsagsprodukter;5.38
+Ra00359;Peber, chili, konserves;Grøntsager og grøntsagsprodukter;1.51
+Ra00360;Asier, syltede;Grøntsager og grøntsagsprodukter;3.07
+Ra00361;Tomat, flået, konserves;Grøntsager og grøntsagsprodukter;1.06
+Ra00362;Rødbede, konserves;Grøntsager og grøntsagsprodukter;0.86
+Ra00363;Kartoffel, konserves;Grøntsager og grøntsagsprodukter;0.99
+Ra00364;Kartoffel, chips (franske kartofler);Grøntsager og grøntsagsprodukter;4.24
+Ra00365;Bambusskud, konserves, usaltet;Grøntsager og grøntsagsprodukter;1.37
+Ra00366;Champignon, konserves;Svampe og svampeprodukter;0.62
+Ra00367;Pommes frites, friturestegt, fastfood;Grøntsager og grøntsagsprodukter;2.85
+Ra00368;Tomatpure, koncentreret;Grøntsager og grøntsagsprodukter;2.67
+Ra00369;Tomatketchup;Smagsgivere og krydderier;2.12
+Ra00370;Baked beans/hvide bønner i tomatsovs, konserves;Bælgfrugter og bælgfrugtprodukter;1.72
+Ra00371;Kartoffelmel;Grøntsager og grøntsagsprodukter;1.68
+Ra00372;Grønne ærter, konserves;Grøntsager og grøntsagsprodukter;2.36
+Ra00373;Soja sauce;Smagsgivere og krydderier;1.88
+Ra00374;Sauce, barbeque;Smagsgivere og krydderier;2.26
+Ra00375;Hvidvin;Vin, øl og spiritus;1.65
+Ra00376;Rosévin;Vin, øl og spiritus;1.65
+Ra00377;Rødvin;Vin, øl og spiritus;1.65
+Ra00378;Hvidvin, mousserende, champagne;Vin, øl og spiritus;1.65
+Ra00379;Bagegær, presset;Brød og bageartikler;1.18
+Ra00380;Grisekød, cocktailpølser;Kød og fjerkræ;2.16
+Ra00381;Pesto;Smagsgivere og krydderier;4.24
+Ra00382;Lasagne, oksekød, færdigretter;Færdigretter;12.16
+Ra00383;Lasagne, vegetarisk, færdigretter;Færdigretter;1.53
+Ra00384;Daal, færdigretter;Færdigretter;2.11
+Ra00385;Sushi, færdigretter;Færdigretter;2.30
+Ra00386;Kylling, hakket;Kød og fjerkræ;5.71
+Ra00387;Pizzadej;Brød og bageartikler;1.07
+Ra00388;Frisk pasta, fettucine spinat;Korn og kornprodukter;1.53
+Ra00389;Tunsalat;Smagsgivere og krydderier;2.06
+Ra00390;Æggesalat;Smagsgivere og krydderier;1.50
+Ra00391;Grisekød, frikadeller;Kød og fjerkræ;3.61
+Ra00392;Hummus, færdig;Bælgfrugter og bælgfrugtprodukter;2.26
+Ra00393;Lasagne, vegansk, færdigretter;Færdigretter;1.46
+Ra00394;Pandekager, færdigretter;Færdigretter;2.44
+Ra00395;Kartoffelgratin / flødekartofler;Grøntsager og grøntsagsprodukter;1.07
+Ra00396;Oksekød, kebab;Kød og fjerkræ;53.92
+Ra00397;Iste, icetea, fersken, tetra brik;Drikkevarer;0.94
+Ra00398;Energidrik, dåse;Drikkevarer;0.58
+Ra00399;Alko-sodavand, 4 % vol.;Vin, øl og spiritus;0.90
+Ra00400;Salsa, hot;Smagsgivere og krydderier;1.42
+Ra00401;Tortillabrød, hvede;Brød og bageartikler;1.16
+Ra00402;Pizzasovs;Grøntsager og grøntsagsprodukter;1.92
+Ra00403;Pastasovs;Grøntsager og grøntsagsprodukter;1.92
+Ra00404;Kokosmælk;Grøntsager og grøntsagsprodukter;6.33
+Ra00405;Hvidløgsbaguette, frost;Brød og bageartikler;1.44
+Ra00406;Müslibar, chokolade;Korn og kornprodukter;3.01
+Ra00407;Kopnudler, kylling;Færdigretter;1.89
+Ra00408;Skivet champignon;Svampe og svampeprodukter;0.32
+Ra00409;Mikroovns popcorn;Korn og kornprodukter;1.81
+Ra00410;Thai meal panang curry chicken, færdigret;Færdigretter;3.61
+Ra00411;Pommes frites, frost;Grøntsager og grøntsagsprodukter;0.80
+Ra00412;Æbleskiver;Brød og bageartikler;1.54
+Ra00413;Kikærter, konserves;Bælgfrugter og bælgfrugtprodukter;1.15
+Ra00414;Grønne bønner, haricots verts, frost;Grøntsager og grøntsagsprodukter;2.16
+Ra00415;Tortilla chips, cheese;Korn og kornprodukter;2.43
+Ra00416;Aspargessnitter;Grøntsager og grøntsagsprodukter;1.79
+Ra00417;Majs, hele kolber;Grøntsager og grøntsagsprodukter;0.98
+Ra00418;Rucola salat, skyllet;Grøntsager og grøntsagsprodukter;0.57
+Ra00419;Oliven tapenade;Grøntsager og grøntsagsprodukter;2.77
+Ra00420;Fyldt frisk pasta;Korn og kornprodukter;1.88
+Ra00421;Grisekød, pepperoni;Kød og fjerkræ;5.70
+Ra00422;Kidney bønner, konserves;Bælgfrugter og bælgfrugtprodukter;1.17
+Ra00423;Kylling, hel;Kød og fjerkræ;3.27
+Ra00424;Grisekød, chorizo, skivet;Kød og fjerkræ;5.96
+Ra00425;Kartoffelsalat;Grøntsager og grøntsagsprodukter;1.25
+Ra00426;Cider  4.5 % vol.;Vin, øl og spiritus;1.15
+Ra00427;Falafel, frost;Planteprodukter og -drikke;2.11
+Ra00428;Biksemad, okse, færdigretter;Færdigretter;18.91
+Ra00429;Biksemad, blandet kød, færdigretter;Færdigretter;12.55
+Ra00430;Grøntsagsbøf;Planteprodukter og -drikke;1.52
+Ra00431;Forårsruller, grøntsager, færdigretter;Færdigretter;3.11
+Ra00432;Forårsruller, kylling, færdigretter;Færdigretter;2.58
+Ra00433;Forårsruller, oksekød, færdigretter;Færdigretter;5.36
+Ra00434;Boller i karry med ris og karrysauce, færdigretter;Færdigretter;2.35
+Ra00435;Porretærte med bacon, færdigretter;Færdigretter;1.42
+Ra00436;Parisertoast, færdigretter;Færdigretter;1.60
+Ra00437;Kapers;Grøntsager og grøntsagsprodukter;1.05
+Ra00438;Babymajs;Grøntsager og grøntsagsprodukter;0.69
+Ra00439;Sorte bønner, konserves;Bælgfrugter og bælgfrugtprodukter;1.17
+Ra00440;Halve ferskner i juice;Frugt og frugtprodukter;1.65
+Ra00441;Marinerede artiskokker;Grøntsager og grøntsagsprodukter;4.15
+Ra00442;Cornichoner;Grøntsager og grøntsagsprodukter;3.07
+Ra00443;Hvidløg i olie;Grøntsager og grøntsagsprodukter;2.46
+Ra00444;Halve pærer i juice;Frugt og frugtprodukter;1.23
+Ra00445;Marinerede grillede peberfrugter;Grøntsager og grøntsagsprodukter;2.53
+Ra00446;Tahin, sesampasta;Smagsgivere og krydderier;7.70
+Ra00447;Soltørrede tomater;Grøntsager og grøntsagsprodukter;2.72
+Ra00448;Røde linser, tørrede;Bælgfrugter og bælgfrugtprodukter;3.08
+Ra00449;Ajvar, relish;Grøntsager og grøntsagsprodukter;2.96
+Ra00450;Vegansk bønnepostej;Planteprodukter og -drikke;2.14
+Ra00451;Plantepostej, ærteprotein og svamp;Planteprodukter og -drikke;0.93
+Ra00452;Chilli cheese tops;Mælk, mejeriprodukter og æg;1.43
+Ra00453;Mozarella sticks;Mælk, mejeriprodukter og æg;1.60
+Ra00454;Chili con carne, færdigretter;Færdigretter;30.41
+Ra00455;Vegansk bolle, sojabaseret;Planteprodukter og -drikke;0.66
+Ra00456;Vegansk schnitzel, sojabaseret;Planteprodukter og -drikke;1.87
+Ra00457;Vegansk burger, sojabaseret;Planteprodukter og -drikke;0.69
+Ra00458;Vegansk fars, plantefars, ærtebaseret;Planteprodukter og -drikke;0.88
+Ra00459;Vegansk pølse, sojabaseret;Planteprodukter og -drikke;1.43
+Ra00460;Vegansk nugget, sojabaseret;Planteprodukter og -drikke;1.95
+Ra00461;Vegansk pulled beans;Planteprodukter og -drikke;1.89
+Ra00462;Grisekød, pulled pork;Kød og fjerkræ;4.52
+Ra00463;Oksekød, pulled beef;Kød og fjerkræ;56.34
+Ra00464;Vegansk chorizo;Planteprodukter og -drikke;1.68
+Ra00465;Risnudler;Korn og kornprodukter;4.93
+Ra00466;Jalapenos;Grøntsager og grøntsagsprodukter;1.51
+Ra00467;Taco shells;Korn og kornprodukter;2.37
+Ra00468;Mango chutney;Frugt og frugtprodukter;3.12
+Ra00469;Grøn karrypasta;Smagsgivere og krydderier;2.06
+Ra00470;Nudler, æg;Korn og kornprodukter;1.74
+Ra00471;Rispandekager;Korn og kornprodukter;4.50
+Ra00472;Vegansk is, havre;Planteprodukter og -drikke;2.31
+Ra00473;Vegansk mayo;Smagsgivere og krydderier;2.67
+Ra00474;Vegansk svampeburger;Planteprodukter og -drikke;1.34
+Ra00475;Vegansk pålæg;Planteprodukter og -drikke;2.67
+Ra00476;Vegansk blok;Planteprodukter og -drikke;2.60
+Ra00477;Plantemagarine;Planteprodukter og -drikke;2.49
+Ra00478;Vegansk bacon;Planteprodukter og -drikke;0.35
+Ra00479;Veganske filetstykker;Planteprodukter og -drikke;1.78
+Ra00480;Falafel-fars;Planteprodukter og -drikke;2.06
+Ra00481;Ærtedrik;Planteprodukter og -drikke;0.71
+Ra00482;Portobello-svamp;Svampe og svampeprodukter;0.26
+Ra00483;Madkorn, kamut;Korn og kornprodukter;1.87
+Ra00484;Chilisauce;Smagsgivere og krydderier;2.10
+Ra00485;Rødløg;Grøntsager og grøntsagsprodukter;0.81
+Ra00486;Basilikum, frisk;Grøntsager og grøntsagsprodukter;0.38
+Ra00487;Basilikum, tørret;Smagsgivere og krydderier;2.80
+Ra00488;Koldskål;Mælk, mejeriprodukter og æg;0.87
+Ra00489;Oksekød, lavt fedtindhold;Kød og fjerkræ;53.19
+Ra00490;Grisekød, grillpølser;Kød og fjerkræ;2.16
+Ra00491;Æblejuice, plastflaske;Drikkevarer;1.68
+Ra00492;Lammekød, hakket;Kød og fjerkræ;34.73
+Ra00493;Burgerbolle;Brød og bageartikler;1.16
+Ra00494;Blåskimmelost, ost;Mælk, mejeriprodukter og æg;1.60
+Ra00495;Gedeost, ost;Mælk, mejeriprodukter og æg;1.60
+Ra00496;Vegansk ost, revet eller skiver;Planteprodukter og -drikke;1.00
+Ra00497;Samosa, vegetarisk frost;Færdigretter;1.28
+Ra00498;Pålægschokolade;Slik og sukkervarer;4.99
+Ra00499;Nutella, nøddecreme;Slik og sukkervarer;5.16
+Ra00500;Smoothie, jordbær/blåbær;Drikkevarer;1.84
+Ra00501;Grisekød, gennemsnitligt;;4.69
+Ra00502;Kyllingekød, gennemsnitligt;;3.27
+Ra00503;Oksekød, gennemsnitligt;;74.84
+Ra00517;Flaskevand uden brus;;0.49
+Ra00521;Paté;;5.20

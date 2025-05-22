@@ -1,6 +1,6 @@
 from sqlalchemy import text
 from models.food import Food
-from client import db
+from app import db
 
 class Recipe:
     def __init__(self, author, recipe_name):
@@ -18,13 +18,14 @@ class Recipe:
 
             for food in self.foods:
                 insert_ingredient_query = """
-                    INSERT INTO Recipe_Content (recipe_name, recipe_author, food_id)
-                    VALUES (:recipe_name, :recipe_author, :food_id)
+                    INSERT INTO Recipe_Content (recipe_name, recipe_author, food_id, amount)
+                    VALUES (:recipe_name, :recipe_author, :food_id, :amount)
                 """
                 db.session.execute(text(insert_ingredient_query), {
                     "recipe_name": self.recipe_name,
                     "recipe_author": self.author,
-                    "food_id": food.db_id
+                    "food_id": food.db_id,
+                    "amount": food.amount
                 })
 
             db.session.commit()
