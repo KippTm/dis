@@ -39,5 +39,5 @@ def check_ingredients():
         for word in match:
             result = db.session.execute(text(fetch_food_query), {"name": word})
             for row in result:
-                
+                row 
        
