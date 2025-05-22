@@ -68,7 +68,7 @@ def check_ingredients():
     ingredient_list = request.json
     result_list = []
     for ingredient in ingredient_list:
-        match_word = re.compile(r"\w+"gm)
+        match_word = re.compile(r"\w+gm")
         match = match_word.findall(ingredient.name)
         if len(match) == 0:
             result_list.append({"name": ""})
