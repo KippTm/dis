@@ -75,7 +75,7 @@ def check_ingredients():
     ingredient_list = request.json["ingredients"]
     result_list = []
     for ingredient in ingredient_list:
-        match_word = re.compile(r"\w+", re.UNICODE)
+        match_word = re.compile(r"[\w\-%]+", re.UNICODE)
         match = match_word.findall(ingredient["name"])
 
         if len(match) == 0:
@@ -97,8 +97,11 @@ def check_ingredients():
         if max_count == 0:
             result_list.append({"name": ""})
             continue
-        get_common_food = """SELECT food_id, name FROM food WHERE food_id=:food_id"""
-        result_list.append({"name": db.session.execute(text(get_common_food), {"food_id": list(freq_words)[0]}).first()[1]})
+        get_common_food = """SELECT food_id, name FROM food WHERE food_id IN :food_id"""
+        
+        rows = db.session.execute(text(get_common_food), {"food_id": tuple(freq_words)})
+        names = [row[1] for row in rows]
+        result_list.append({"name": names})
     return jsonify(result_list)
        
 if __name__ == '__main__':
