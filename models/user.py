@@ -32,8 +32,8 @@ class User:
         # returns a bool to check for 
     def try_create_user(self) -> bool:
         try:
-            insert_query = "INSERT INTO Users (u_name, password) VALUES (%s, %s)"
-            db.session.execute(text(insert_query), (self.username, self.password))
+            insert_query = "INSERT INTO Users (username, password) VALUES (:username, :password)"
+            db.session.execute(text(insert_query), {"username": self.username, "password": self.password})
             db.session.commit()
             return True
         except:
