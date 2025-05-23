@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipe Site - Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col items-center pt-20 px-4">
+    <!-- Navbar positioned top-left -->
+    <nav class="fixed top-0 left-0 bg-white shadow-md py-4 px-6 flex space-x-4">
+        <form action="/new_recipe" method="GET">
+            <button
+                type="submit"
+                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+            >
+                Add Recipe
+            </button>
+        </form>
+        <form action="/find_recipe" method="GET">
+            <button
+                type="submit"
+                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+            >
+                Find Recipe
+            </button>
+        </form>
+        <form action="/profile" method="GET">
+            <button
+                type="submit"
+                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+            >
+                Profile
+            </button>
+        </form>
+    </nav>
+
+    <!-- Profile container -->
+    <div class="bg-white shadow-lg rounded-2xl w-full max-w-3xl p-6">
+        <h1 class="text-3xl font-bold text-green-600 mb-4 text-center">
+            Profile
+        </h1>
+        
+        <!-- Username -->
+        <div class="text-center mb-8">
+            <p class="text-gray-700 text-xl">Welcome, 
+                <span class="font-semibold text-green-700">{{ user }}</span>!
+            </p>
+        </div>
+
+        <!-- Recipe List -->
+        <div>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Your Recipes</h2>
+            {% if recipes %}
+                <ul class="space-y-3">
+                    {% for recipe in recipes %}
+                        <li class="p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
+                            {{ recipe }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-500 italic">You haven't added any recipes yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+    
+</html>
+
+

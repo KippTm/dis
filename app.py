@@ -103,6 +103,14 @@ def check_ingredients():
         names = [row[1] for row in rows]
         result_list.append({"name": names})
     return jsonify(result_list)
-       
+
+@app.route("/profile")
+def profile():
+    user = request.cookies.get('user')
+    get_user_recipes = """ SELECT recipe_name FROM Recipe WHERE author = :user """
+    recipes = db.session.execute(text(get_user_recipes), {"user": user})
+    return render_template("profile.html", user=user, recipes=recipes)
+
+
 if __name__ == '__main__':
     app.run(port=8000, debug=True)
