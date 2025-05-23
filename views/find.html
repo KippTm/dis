@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Find Recipe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen pt-20 px-4 flex flex-col items-center">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 bg-white shadow-md py-4 px-6 flex space-x-4">
+        <form action="/new_recipe" method="GET">
+            <button
+                type="submit"
+                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+            >
+                Add Recipe
+            </button>
+        </form>
+        <form action="/find_recipe" method="GET">
+            <button
+                type="submit"
+                class="bg-green-700 text-white px-4 py-2 rounded-lg transition"
+            >
+                Find Recipe
+            </button>
+        </form>
+        <form action="/profile" method="GET">
+            <button
+                type="submit"
+                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
+            >
+                Profile
+            </button>
+        </form>
+    </nav>
+
+    <!-- Search Content -->
+    <div class="w-full max-w-2xl bg-white shadow-lg rounded-2xl p-6 mt-4">
+        <h1 class="text-3xl font-bold text-green-600 mb-6 text-center">Find a Recipe</h1>
+
+        <!-- Search form -->
+        <form method="GET" action="/find_recipe" class="flex items-center space-x-4 mb-6">
+            <input
+                type="text"
+                name="query"
+                placeholder="Enter recipe name"
+                class="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+            />
+            <button
+                type="submit"
+                class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition"
+            >
+                Search
+            </button>
+        </form>
+
+        <!-- Search Results -->
+        {% if results is defined %}
+            {% if results %}
+                <ul class="space-y-3">
+                    {% for recipe in results %}
+                        <li class="p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
+                            {{ recipe }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-gray-500 italic text-center">No recipes found.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+
+</body>
+</html>
+

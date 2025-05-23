@@ -111,6 +111,14 @@ def profile():
     recipes = db.session.execute(text(get_user_recipes), {"user": user})
     return render_template("profile.html", user=user, recipes=recipes)
 
+@app.route("/find_recipe")
+def find_recipe():
+    query = request.args.get("query")
+    results = []
+    if query:
+        recipe_search = """ SELECT recipe_name FROM Recipe WHERE recipe_name = :query """
+        results = db.session.execute(text(recipe_search), {"query" : query})
+    return render_template("find.html", results=results)
 
 if __name__ == '__main__':
     app.run(port=8000, debug=True)
