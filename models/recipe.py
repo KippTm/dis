@@ -1,6 +1,6 @@
 from db import db
 from sqlalchemy import text
-from .food import Food  # Assuming Food model is in the same directory
+from .food import Food
 
 
 class RecipeIngredient:
@@ -14,7 +14,6 @@ class Recipe:
     def __init__(self, recipe_name, author, ingredients=None):
         self.recipe_name = recipe_name
         self.author = author
-        # ingredients should be a list of dictionaries like [{"name": "...", "amount": "..."}]
         self.ingredients_data = ingredients if ingredients is not None else []
 
     @staticmethod
@@ -32,45 +31,45 @@ class Recipe:
     def save(self):
         """Saves the recipe and its ingredients to the database."""
         try:
-            with db.session.begin():
-                # Insert the recipe
-                insert_recipe_query = """
-                    INSERT INTO Recipe (author, recipe_name)
-                    VALUES (:author, :recipe_name)
-                """
-                db.session.execute(
-                    text(insert_recipe_query),
-                    {"author": self.author, "recipe_name": self.recipe_name},
-                )
+            # Insert the recipe
+            insert_recipe_query = """
+                INSERT INTO Recipe (author, recipe_name)
+                VALUES (:author, :recipe_name)
+            """
+            db.session.execute(
+                text(insert_recipe_query),
+                {"author": self.author, "recipe_name": self.recipe_name},
+            )
 
-                # Insert ingredients
-                for ing_data in self.ingredients_data:
-                    food_id = Food.find_id_by_name(ing_data["name"])
-                    if food_id:
-                        insert_recipe_content_query = """
-                            INSERT INTO Recipe_Content (recipe_name, recipe_author, food_id, amount)
-                            VALUES (:recipe_name, :recipe_author, :food_id, :amount)
-                        """
-                        db.session.execute(
-                            text(insert_recipe_content_query),
-                            {
-                                "recipe_name": self.recipe_name,
-                                "recipe_author": self.author,
-                                "food_id": food_id,
-                                "amount": ing_data["amount"],
-                            },
-                        )
-                    else:
-                        # Optionally handle cases where ingredient name doesn't match any food_id
-                        print(
-                            f"Warning: Food item '{ing_data['name']}' not found. Skipping."
-                        )
+            # Insert ingredients
+            for ing_data in self.ingredients_data:
+                food_id = Food.find_id_by_name(ing_data["name"])
+                if food_id:
+                    insert_recipe_content_query = """
+                        INSERT INTO Recipe_Content (recipe_name, recipe_author, food_id, amount)
+                        VALUES (:recipe_name, :recipe_author, :food_id, :amount)
+                    """
+                    db.session.execute(
+                        text(insert_recipe_content_query),
+                        {
+                            "recipe_name": self.recipe_name,
+                            "recipe_author": self.author,
+                            "food_id": food_id,
+                            "amount": ing_data["amount"],
+                        },
+                    )
+                else:
+
+                    print(
+                        f"Warning: Food item '{ing_data['name']}' not found. Skipping."
+                    )
+            db.session.commit()  # Commit the transaction after all operations
             return True
         except Exception as e:
-            db.session.rollback()
+            db.session.rollback()  # Rollback in case of any error
             print(f"Error saving recipe: {str(e)}")
-            # It might be better to raise the exception or return a more specific error
-            raise e  # Or return False / error message
+
+            raise e
 
     @staticmethod
     def get_recipes_by_author(author_username):
@@ -88,8 +87,7 @@ class Recipe:
         """Searches for recipes by name."""
         recipe_search_query = """
             SELECT recipe_name, author FROM Recipe WHERE recipe_name ILIKE :query
-        """  # Using ILIKE for case-insensitive search, assuming PostgreSQL
-        # If not PostgreSQL, adjust accordingly (e.g., LOWER(recipe_name) LIKE LOWER(:query))
+        """  # Using ILIKE for case-insensitive search
         results = db.session.execute(
             text(recipe_search_query), {"query": f"%{query_term}%"}
         )
