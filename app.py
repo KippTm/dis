@@ -155,11 +155,6 @@ def add_recipe_post():
                             "amount": ingredient["amount"],
                         },
                     )
-                # else:
-                #     # Optional: Handle case where ingredient is not found in Food table
-                #     print(f"Ingredient not found: {ingredient['name']}")
-                #     # You might want to skip this ingredient or return an error
-
         return jsonify({"success": True})
 
     except Exception as e:
@@ -223,6 +218,13 @@ def find_recipe():
         )
         results = db.session.execute(text(recipe_search), {"query": query})
     return render_template("find.html", results=results)
+
+
+@app.route("/logout", methods=["POST"])  # Or GET if you used GET in the form
+def logout():
+    response = make_response(redirect("/login"))
+    response.set_cookie("user", "", expires=0)  # Clear the cookie
+    return response
 
 
 if __name__ == "__main__":
