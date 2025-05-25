@@ -1,7 +1,6 @@
 """Food model for managing food items in the database."""
 
 import re
-
 from sqlalchemy import text
 from db import db
 
@@ -16,14 +15,11 @@ class Food:
         self.emission = emission
 
     @staticmethod
-    def find_id_by_name(name):
+    def find_id_by_name(food_name):
         """Finds the food_id for a given ingredient name."""
-        find_food_query = """
-            SELECT food_id FROM Food WHERE LOWER(name) = LOWER(:name) LIMIT 1
-        """
-        result = db.session.execute(text(find_food_query), {"name": name})
-        food_row = result.fetchone()
-        return food_row[0] if food_row else None
+        query = "SELECT food_id FROM Food WHERE name = :name"
+        result = db.session.execute(text(query), {"name": food_name}).fetchone()
+        return result[0] if result else None
 
     @staticmethod
     def search_by_name_pattern(ingredient_name_raw):
@@ -47,3 +43,15 @@ class Food:
         except (db.SQLAlchemyError, ValueError) as e:
             print(f"Error fetching ingredient suggestions: {e}")
             return []
+
+    @staticmethod
+    def get_all_categories():
+        """Fetches all distinct, non-null food categories, ordered alphabetically."""
+        query = """
+            SELECT DISTINCT category
+            FROM Food
+            WHERE category IS NOT NULL AND category <> ''
+            ORDER BY category
+        """
+        result = db.session.execute(text(query)).fetchall()
+        return [row[0] for row in result]

@@ -1,10 +1,14 @@
-from db import db
-from sqlalchemy import text
-from .food import Food
+"""Recipe model for managing recipes and their ingredients."""
+
 from decimal import Decimal
+from sqlalchemy import text
+from db import db
+from models.food import Food
 
 
 class RecipeIngredient:
+    """Represents an ingredient in a recipe with its name, amount, and optional food_id."""
+
     def __init__(self, food_name, amount, food_id=None):
         self.food_name = food_name
         self.amount = amount
@@ -12,6 +16,8 @@ class RecipeIngredient:
 
 
 class Recipe:
+    """Represents a recipe with its name, author, and associated ingredients."""
+
     def __init__(self, recipe_name, author, ingredients=None):
         self.recipe_name = recipe_name
         self.author = author
@@ -85,7 +91,7 @@ class Recipe:
 
     @staticmethod
     def search_by_name(query_term):
-        """Searches for recipes by name and returns a list of dicts with 'recipe_name' and 'author'."""
+        """Searches for recipes by name using a case-insensitive search."""
         recipe_search_query = """
             SELECT recipe_name, author FROM Recipe WHERE recipe_name ILIKE :query
             ORDER BY recipe_name
@@ -93,6 +99,49 @@ class Recipe:
         results = db.session.execute(
             text(recipe_search_query), {"query": f"%{query_term}%"}
         ).fetchall()
+        return [{"recipe_name": row[0], "author": row[1]} for row in results]
+
+    @staticmethod
+    def search_recipes(query_term="", selected_categories=None):
+        """
+        Searches for recipes by name and optionally filters by food categories.
+        Returns a list of dicts with 'recipe_name' and 'author'.
+        """
+        params = {}
+
+        # Base query to select distinct recipes
+        sql_query_parts = ["SELECT DISTINCT r.recipe_name, r.author", "FROM Recipe r"]
+
+        conditions = []
+
+        if query_term:
+            params["query_term"] = f"%{query_term}%"
+            conditions.append("r.recipe_name ILIKE :query_term")
+
+        if selected_categories and len(selected_categories) > 0:
+            # Ensure selected_categories is a tuple for SQL IN clause
+            params["selected_categories"] = tuple(selected_categories)
+
+            # Subquery to check if the recipe contains any ingredient from the selected categories
+            category_filter_subquery = """
+                EXISTS (
+                    SELECT 1
+                    FROM Recipe_Content rc
+                    JOIN Food f ON rc.food_id = f.food_id
+                    WHERE rc.recipe_author = r.author AND rc.recipe_name = r.recipe_name
+                    AND f.category IN :selected_categories
+                )
+            """
+            conditions.append(category_filter_subquery)
+
+        if conditions:
+            sql_query_parts.append("WHERE " + " AND ".join(conditions))
+
+        sql_query_parts.append("ORDER BY r.recipe_name")
+
+        final_query = " ".join(sql_query_parts)
+
+        results = db.session.execute(text(final_query), params).fetchall()
         return [{"recipe_name": row[0], "author": row[1]} for row in results]
 
     @staticmethod
@@ -138,7 +187,7 @@ class Recipe:
             amount_grams = Decimal(row[3])  # rc.amount
             emission_per_kg = Decimal(row[4])  # f.emission
 
-            # Calculate emission for this ingredient: (amount_g / 1000) * emission_kg_co2_per_kg_food
+            # Calculate CO2 emission for this ingredient
             ingredient_emission = (amount_grams / Decimal("1000.0")) * emission_per_kg
             total_recipe_emission += ingredient_emission
 
@@ -175,7 +224,7 @@ class Recipe:
 #             insert_recipe_query = """
 #                 INSERT INTO Recipe (author, recipe_name) VALUES (:author, :recipe_name)
 #             """
-#             db.session.execute(text(insert_recipe_query), {"author": self.author, "recipe_name": self.recipe_name})
+
 
 #             for food in self.foods:
 #                 insert_ingredient_query = """

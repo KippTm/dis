@@ -83,17 +83,31 @@ def check_ingredients():
     return jsonify(result_list)
 
 
-@recipe_bp.route("/find_recipe")
+@recipe_bp.route("/find_recipe", methods=["GET"])
 def find_recipe_page():
     """Renders the find recipe page."""
-    query_term = request.args.get("query")
-    results = []
-    if query_term:
-        results = Recipe.search_by_name(query_term)
-    try:
-        return render_template("find.html", results=results, query=query_term)
-    except (TemplateNotFound, FileNotFoundError):
-        abort(404)
+
+    search_query = request.args.get("query", "").strip()
+    # For checkboxes, request.args.getlist will get all values for 'category'
+    selected_cats = request.args.getlist("category")
+
+    # Fetch all available categories for the filter UI
+    all_food_categories = Food.get_all_categories()
+
+    found_recipes = []
+    # Perform search only if there's a search query or categories are selected
+    if search_query or selected_cats:
+        found_recipes = Recipe.search_recipes(
+            query_term=search_query, selected_categories=selected_cats
+        )
+
+    return render_template(
+        "find.html",
+        results=found_recipes,
+        search_query=search_query,
+        all_categories=all_food_categories,
+        selected_categories=selected_cats,  # Pass back selected categories to re-check boxes
+    )
 
 
 @recipe_bp.route("/recipe/<string:author_username>/<string:recipe_name_str>")
