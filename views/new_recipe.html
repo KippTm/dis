@@ -146,6 +146,33 @@
       alert('An error occurred while saving the recipe');
     });
     }
+    function clearForm() {
+      // Clear recipe name
+      document.getElementById('recipe_name').value = '';
+      
+      // Clear all ingredient fields
+      const ingredientContainer = document.getElementById('ingredients');
+      
+      // Keep the first ingredient field but clear its values
+      const firstIngredientField = ingredientContainer.firstElementChild;
+      if (firstIngredientField) {
+        const ingredientInput = firstIngredientField.querySelector('input[name="ingredient"]');
+        const amountInput = firstIngredientField.querySelector('input[name="amount"]');
+        if (ingredientInput) ingredientInput.value = '';
+        if (amountInput) amountInput.value = '';
+      }
+      
+      // Remove all additional ingredient fields
+      while (ingredientContainer.children.length > 1) {
+        ingredientContainer.removeChild(ingredientContainer.lastChild);
+      }
+      
+      // Reset the checked state
+      ingredientsChecked = false;
+      
+      // Disable the submit button
+      document.getElementById('submit-btn').disabled = true;
+    }
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -176,6 +203,9 @@
       <div>
         <button id="submit-btn" type="submit" class="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer " >
           Submit Recipe
+        </button>
+          <button type="button" onclick="clearForm()" class="ml-2 px-6 py-2 bg-red-500 text-white rounded hover:bg-red-600 cursor-pointer">
+          Clear Form
         </button>
       </div>
     </form>
