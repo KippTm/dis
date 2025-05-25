@@ -135,8 +135,6 @@
             allFieldsValid = false;
             if (!ingredientName) missingInfo.push(`Ingredient name for item ${i+1} is missing`);
             if (!amount) missingInfo.push(`Amount for ingredient item ${i+1} is missing`);
-            // No need to check further if one is invalid for this specific ingredient row,
-            // but we continue the loop to gather all missing fields for the tooltip.
           }
         }
       }
@@ -150,7 +148,6 @@
           if (missingInfo.length > 0) {
             submitBtn.title = "Please fix the following: " + missingInfo.join(', ') + ".";
           } else {
-             // Should not happen if allFieldsValid is false, but as a fallback:
             submitBtn.title = "Please fill in all required fields: Recipe Name, and at least one Ingredient with Name and Amount.";
           }
         } else {
@@ -180,17 +177,16 @@
             if (firstAmountInput) {
                 firstAmountInput.oninput = updateSubmitButtonState;
             }
-            // No need to add remove listener here if it's part of the static HTML with onclick
         }
         
-        updateAllIngredientRowIndices(); // Ensure initial indices are set up if needed, though static one is 0
+        updateAllIngredientRowIndices(); 
         updateSubmitButtonState(); 
     });
 
     function handleSubmit(e) {
-      e.preventDefault(); // Prevent default form submission
+      e.preventDefault(); 
 
-      updateSubmitButtonState(); // Ensure state is current
+      updateSubmitButtonState();
       if (document.getElementById('submit-btn').disabled) {
         alert("Please ensure the recipe name is filled and all ingredients have a name and an amount.");
         return;
@@ -261,7 +257,6 @@
         const amtInput = firstIngredientDiv.querySelector('input[name="amount"]');
         if (ingInput) {
             ingInput.value = '';
-            // Ensure its index is correct (0) and suggestions are handled
             ingInput.dataset.index = 0; 
             ingInput.oninput = () => handleIngredientInput(ingInput, 0);
             hideSuggestions(0);
