@@ -104,10 +104,10 @@ def find_recipe_page():
             sort_emission if sort_emission in ["lowest", "highest"] else None
         )
 
-        if selected_category_from_form == "" and not sort_emission:
-            effective_query_term = ""
-        elif selected_category_from_form == "" and sort_emission:
-            pass
+        # if selected_category_from_form == "" and not sort_emission:
+        #     effective_query_term = ""
+        # elif selected_category_from_form == "" and sort_emission:
+        #     pass
 
         found_recipes = Recipe.search_recipes(
             query_term=effective_query_term,

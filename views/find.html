@@ -40,6 +40,8 @@
                         inputElement.value = suggestion;
                         suggestionsBox.innerHTML = '';
                         suggestionsBox.classList.add('hidden');
+                        if (searchForm) 
+                           searchForm.submit(); 
                     };
                     suggestionsBox.appendChild(item);
                 });
@@ -65,7 +67,8 @@
 {% block content %}
     <div class="w-full max-w-3xl bg-white shadow-lg rounded-2xl p-6 md:p-8 mt-4 mx-auto">
         <h1 class="text-3xl font-bold text-green-600 mb-6 text-center">Find a Recipe</h1>
-        <form method="GET"
+        <form id="find-recipe-form"
+              method="get"
               action="{{ url_for("recipe_bp.find_recipe_page") }}"
               class="space-y-6">
             <!-- Search by Name -->
