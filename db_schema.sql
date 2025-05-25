@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS Recipe_Content CASCADE;
 
 CREATE TABLE Users 
 (	username VARCHAR(50),
-	password  VARCHAR(100),
+	password  VARCHAR(255),
 	PRIMARY KEY (username));
 
 CREATE TABLE Recipe 
@@ -16,7 +16,7 @@ CREATE TABLE Recipe
 	author VARCHAR(50),
 	recipe_name VARCHAR(50),
 	PRIMARY KEY (author, recipe_name),
-	FOREIGN KEY (author) REFERENCES Users(username));
+	FOREIGN KEY (author) REFERENCES Users(username));/
 
 CREATE TABLE Food
 (
