@@ -101,6 +101,25 @@ def add_recipe_post():
 
     try:
         with db.session.begin():
+            # Check for existing recipe name for this user
+            check_recipe_query = """
+                SELECT recipe_name FROM Recipe
+                WHERE author = :author AND recipe_name = :recipe_name
+            """
+            existing_recipe = db.session.execute(
+                text(check_recipe_query), {"author": user, "recipe_name": recipe_name}
+            ).fetchone()
+
+            if existing_recipe:
+                return (
+                    jsonify(
+                        {
+                            "error": "A recipe with this name already exists for your account."
+                        }
+                    ),
+                    409,
+                )
+
             insert_recipe_query = """
                 INSERT INTO Recipe (author, recipe_name)
                 VALUES (:author, :recipe_name)
@@ -136,6 +155,10 @@ def add_recipe_post():
                             "amount": ingredient["amount"],
                         },
                     )
+                # else:
+                #     # Optional: Handle case where ingredient is not found in Food table
+                #     print(f"Ingredient not found: {ingredient['name']}")
+                #     # You might want to skip this ingredient or return an error
 
         return jsonify({"success": True})
 

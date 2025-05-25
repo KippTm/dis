@@ -4,173 +4,277 @@
 {% endblock title %}
 {% block head_extra %}
   <script>
-    let ingredientsChecked = false;
-
     function addIngredientField() {
       const container = document.getElementById('ingredients');
+      const index = container.children.length; // New index will be current number of children
       const div = document.createElement('div');
-      div.className = 'flex gap-2 mb-2 relative';
-      const index = container.children.length;
+      // Add a common class for easier selection, e.g., 'ingredient-row'
+      div.className = 'ingredient-row flex gap-2 mb-2 relative items-center'; 
       div.innerHTML = `
         <div class="w-full relative">
-          <input type="text" name="ingredient" placeholder="Ingredient" class="ingredient-input w-full p-2 border rounded" oninput="disableSubmit(); hideSuggestions(${index})" data-index="${index}" />
+          <input type="text" name="ingredient" placeholder="Ingredient" class="ingredient-input w-full p-2 border rounded" oninput="handleIngredientInput(this, ${index})" data-index="${index}" />
           <div class="autocomplete bg-white border border-gray-300 rounded absolute w-full z-10 hidden max-h-40 overflow-y-auto" id="suggestions-${index}"></div>
         </div>
-        <input type="text" name="amount" placeholder="Amount" class="w-1/3 p-2 border rounded" oninput="disableSubmit()" />
+        <input type="text" name="amount" placeholder="Amount" class="w-1/3 p-2 border rounded" oninput="updateSubmitButtonState()" />
+        <button type="button" onclick="removeIngredientField(this)" class="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs">Remove</button>
       `;
       container.appendChild(div);
-      disableSubmit();
+      // Ensure the new ingredient input also triggers handleIngredientInput correctly
+      const newIngredientInput = div.querySelector('input[name="ingredient"]');
+      newIngredientInput.oninput = () => handleIngredientInput(newIngredientInput, index);
+      
+      const newAmountInput = div.querySelector('input[name="amount"]');
+      newAmountInput.oninput = updateSubmitButtonState;
+
+      updateSubmitButtonState(); 
+    }
+
+    function removeIngredientField(buttonElement) {
+      const ingredientRow = buttonElement.closest('.ingredient-row');
+      if (ingredientRow) {
+        ingredientRow.remove();
+        updateAllIngredientRowIndices(); // Re-index remaining fields
+        updateSubmitButtonState();
+      }
+    }
+
+    function updateAllIngredientRowIndices() {
+      const container = document.getElementById('ingredients');
+      const rows = container.querySelectorAll('.ingredient-row'); // Use the class selector
+      rows.forEach((row, newIndex) => {
+        const ingredientInput = row.querySelector('input[name="ingredient"]');
+        const suggestionsBox = row.querySelector('.autocomplete');
+        
+        if (ingredientInput) {
+          ingredientInput.dataset.index = newIndex;
+          // Update the oninput handler to pass the new correct index
+          ingredientInput.oninput = () => handleIngredientInput(ingredientInput, newIndex);
+        }
+        if (suggestionsBox) {
+          suggestionsBox.id = `suggestions-${newIndex}`;
+        }
+      });
     }
 
     function hideSuggestions(index) {
       const suggBox = document.getElementById(`suggestions-${index}`);
-      if (suggBox) suggBox.classList.add('hidden');
+      if (suggBox) {
+        suggBox.innerHTML = ''; // Clear suggestions before hiding
+        suggBox.classList.add('hidden');
+      }
     }
 
-    function checkIngredients() {
-      const ingredientEls = document.querySelectorAll('input[name="ingredient"]');
-      const amountEls = document.querySelectorAll('input[name="amount"]');
-      const ingredients = [];
-      let valid = true;
-      for (let i = 0; i < ingredientEls.length; i++) {
-        const name = ingredientEls[i].value.trim();
-        const amount = amountEls[i].value.trim();
-        if (!name || !amount) {
-          valid = false;
-          break;
-        }
-        ingredients.push({ name, amount });
-      }
+    function handleIngredientInput(inputElement, index) {
+      const ingredientName = inputElement.value.trim();
+      const suggestionsBox = document.getElementById(`suggestions-${index}`);
+      
+      hideSuggestions(index); // Clear and hide previous suggestions first
 
-      if (!valid) {
-        ingredientsChecked = false;
-        document.getElementById('submit-btn').disabled = true;
+      if (!ingredientName) {
+        updateSubmitButtonState();
         return;
       }
 
-      const body = JSON.stringify({ ingredients });
+      // Fetch suggestions for the current ingredient
       fetch('/check-ingredients', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body
-      }).then(response => response.json())
-        .then(data => {
-          if (Array.isArray(data)) {
-            for (let i = 0; i < data.length && i < ingredientEls.length; i++) {
-              const field = ingredientEls[i];
-              const suggestionsBox = document.getElementById(`suggestions-${i}`);
-              if (data[i] && data[i].name) {
-                const suggestions = Array.isArray(data[i].name) ? data[i].name : [data[i].name];
-                if (suggestions.length === 1) {
-                  field.value = suggestions[0];
-                  hideSuggestions(i);
-                } else {
-                  suggestionsBox.innerHTML = '';
-                  suggestions.forEach(s => {
-                    const item = document.createElement('div');
-                    item.textContent = s;
-                    item.className = 'cursor-pointer p-2 hover:bg-gray-100';
-                    item.onclick = () => {
-                      field.value = s;
-                      hideSuggestions(i);
-                      disableSubmit();
-                    };
-                    suggestionsBox.appendChild(item);
-                  });
-                  suggestionsBox.classList.remove('hidden');
-                }
+        headers: { 'Content-Type': 'application/json' },
+        // Send as a list with one item, as the backend expects a list
+        body: JSON.stringify({ ingredients: [{ name: ingredientName, amount: '' }] }) 
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0 && data[0] && data[0].name) {
+          const suggestions = Array.isArray(data[0].name) ? data[0].name : [data[0].name];
+          // Ensure suggestions are not just an empty string in an array
+          if (suggestions.length > 0 && !(suggestions.length === 1 && suggestions[0] === "")) {
+            suggestions.forEach(s => {
+              if (s && s.trim() !== "") { // Ensure individual suggestion is not empty
+                const item = document.createElement('div');
+                item.textContent = s;
+                item.className = 'cursor-pointer p-2 hover:bg-gray-100';
+                item.onclick = () => {
+                  inputElement.value = s;
+                  hideSuggestions(index);
+                  updateSubmitButtonState(); // Update state after selecting a suggestion
+                };
+                suggestionsBox.appendChild(item);
               }
+            });
+            if (suggestionsBox.children.length > 0) {
+                 suggestionsBox.classList.remove('hidden');
             }
-            ingredientsChecked = true;
-            document.getElementById('submit-btn').disabled = false;
-          } else {
-            ingredientsChecked = false;
-            document.getElementById('submit-btn').disabled = true;
           }
-        }).catch(() => {
-          ingredientsChecked = false;
-          document.getElementById('submit-btn').disabled = true;
-        });
+        }
+      })
+      .catch(error => console.error('Error fetching suggestions:', error));
+      
+      updateSubmitButtonState();
     }
 
-    function disableSubmit() {
-      ingredientsChecked = false;
-      document.getElementById('submit-btn').disabled = true;
-    }
-
-    function handleSubmit(e) {
-      if (!ingredientsChecked) {
-        console.error('Ingredients not checked or invalid');
-        return;
-      }
-        const recipeName = document.getElementById('recipe_name').value.trim();
-      if (!recipeName) {
-        alert("Recipe name is required");
-        return;
-      }
-      e.preventDefault();
+    function updateSubmitButtonState() {
+      const recipeNameInput = document.getElementById('recipe_name');
+      const recipeName = recipeNameInput ? recipeNameInput.value.trim() : "";
       const ingredientEls = document.querySelectorAll('input[name="ingredient"]');
-      const amountEls = document.querySelectorAll('input[name="amount"]');
-      const ingredients = [];
-      for (let i = 0; i < ingredientEls.length; i++) {
-        if (ingredientEls[i].value.trim()) {
-          ingredients.push({
-            name: ingredientEls[i].value.trim(),
-            amount: amountEls[i].value.trim()
-          });
+      let allFieldsValid = !!recipeName; 
+      let missingInfo = [];
+
+      if (!recipeName) {
+        missingInfo.push("Recipe name is missing");
+      }
+
+      if (ingredientEls.length === 0) { 
+        allFieldsValid = false; 
+        missingInfo.push("At least one ingredient is required");
+      } else {
+        for (let i = 0; i < ingredientEls.length; i++) {
+          const ingredientName = ingredientEls[i].value.trim();
+          const amountInput = ingredientEls[i].closest('.flex.gap-2.mb-2.relative').querySelector('input[name="amount"]');
+          const amount = amountInput ? amountInput.value.trim() : "";
+          if (!ingredientName || !amount) {
+            allFieldsValid = false;
+            if (!ingredientName) missingInfo.push(`Ingredient name for item ${i+1} is missing`);
+            if (!amount) missingInfo.push(`Amount for ingredient item ${i+1} is missing`);
+            // No need to check further if one is invalid for this specific ingredient row,
+            // but we continue the loop to gather all missing fields for the tooltip.
+          }
         }
       }
+      
+      const submitBtn = document.getElementById('submit-btn');
+      if (submitBtn) {
+        submitBtn.disabled = !allFieldsValid;
+        if (!allFieldsValid) {
+          submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          submitBtn.classList.remove('hover:bg-green-600');
+          if (missingInfo.length > 0) {
+            submitBtn.title = "Please fix the following: " + missingInfo.join(', ') + ".";
+          } else {
+             // Should not happen if allFieldsValid is false, but as a fallback:
+            submitBtn.title = "Please fill in all required fields: Recipe Name, and at least one Ingredient with Name and Amount.";
+          }
+        } else {
+          submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          submitBtn.classList.add('hover:bg-green-600');
+          submitBtn.title = 'Submit your recipe'; // Default title when enabled
+        }
+      }
+    }
+    
+    // Initial setup after DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        // Attach event listeners to initially present elements
+        const recipeNameInput = document.getElementById('recipe_name');
+        if (recipeNameInput) {
+            recipeNameInput.oninput = updateSubmitButtonState;
+        }
+
+        // For the first, statically rendered ingredient row
+        const firstIngredientRowDiv = document.getElementById('ingredients').querySelector('.ingredient-row'); // Use class
+        if (firstIngredientRowDiv) {
+            const firstIngredientInput = firstIngredientRowDiv.querySelector('input[name="ingredient"][data-index="0"]');
+            if (firstIngredientInput) {
+                firstIngredientInput.oninput = () => handleIngredientInput(firstIngredientInput, 0);
+            }
+            const firstAmountInput = firstIngredientRowDiv.querySelector('input[name="amount"]');
+            if (firstAmountInput) {
+                firstAmountInput.oninput = updateSubmitButtonState;
+            }
+            // No need to add remove listener here if it's part of the static HTML with onclick
+        }
+        
+        updateAllIngredientRowIndices(); // Ensure initial indices are set up if needed, though static one is 0
+        updateSubmitButtonState(); 
+    });
+
+    function handleSubmit(e) {
+      e.preventDefault(); // Prevent default form submission
+
+      updateSubmitButtonState(); // Ensure state is current
+      if (document.getElementById('submit-btn').disabled) {
+        alert("Please ensure the recipe name is filled and all ingredients have a name and an amount.");
+        return;
+      }
+
+      const recipeName = document.getElementById('recipe_name').value.trim();
+      const ingredientEls = document.querySelectorAll('input[name="ingredient"]');
+      const ingredients = [];
+
+      for (let i = 0; i < ingredientEls.length; i++) {
+        const name = ingredientEls[i].value.trim();
+        const amountInput = ingredientEls[i].closest('.flex.gap-2.mb-2.relative').querySelector('input[name="amount"]');
+        const amount = amountInput ? amountInput.value.trim() : "";
+
+        // Ensure both name and amount are filled
+        if (name && amount) { 
+          ingredients.push({ name, amount });
+        } else {
+            alert("All ingredient fields (name and amount) must be filled. This should have been caught.");
+            return; 
+        }
+      }
+
+      if (ingredients.length === 0) {
+          alert("A recipe must have at least one ingredient.");
+          return;
+      }
+
       const body = JSON.stringify({
         recipe_name: recipeName,
         ingredients: ingredients
       });
-      fetch('new_recipe', {
+
+      fetch('/new_recipe', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body
-      }).then(response => {
-      if (response.ok) {
-        window.location.href = '/new_recipe';
-        alert('Recipe saved successfully!');
-      } else {
-        alert('Failed to save recipe');
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('An error occurred while saving the recipe');
-    });
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('Recipe saved successfully!');
+          clearForm(); 
+        } else {
+          response.json().then(err => alert('Failed to save recipe: ' + (err.error || 'Server error'))).catch(() => alert('Failed to save recipe and could not parse error response.'));
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while saving the recipe.');
+      });
     }
+
     function clearForm() {
-      // Clear recipe name
-      document.getElementById('recipe_name').value = '';
+      const recipeNameInput = document.getElementById('recipe_name');
+      if (recipeNameInput) recipeNameInput.value = '';
       
-      // Clear all ingredient fields
       const ingredientContainer = document.getElementById('ingredients');
       
-      // Keep the first ingredient field but clear its values
-      const firstIngredientField = ingredientContainer.firstElementChild;
-      if (firstIngredientField) {
-        const ingredientInput = firstIngredientField.querySelector('input[name="ingredient"]');
-        const amountInput = firstIngredientField.querySelector('input[name="amount"]');
-        if (ingredientInput) ingredientInput.value = '';
-        if (amountInput) amountInput.value = '';
-      }
-      
-      // Remove all additional ingredient fields
+      // Remove all but the first ingredient field template
       while (ingredientContainer.children.length > 1) {
         ingredientContainer.removeChild(ingredientContainer.lastChild);
       }
       
-      // Reset the checked state
-      ingredientsChecked = false;
+      // Clear the first (or only) ingredient field
+      const firstIngredientDiv = ingredientContainer.querySelector('.ingredient-row'); // Use class
+      if (firstIngredientDiv) {
+        const ingInput = firstIngredientDiv.querySelector('input[name="ingredient"]');
+        const amtInput = firstIngredientDiv.querySelector('input[name="amount"]');
+        if (ingInput) {
+            ingInput.value = '';
+            // Ensure its index is correct (0) and suggestions are handled
+            ingInput.dataset.index = 0; 
+            ingInput.oninput = () => handleIngredientInput(ingInput, 0);
+            hideSuggestions(0);
+        }
+        if (amtInput) amtInput.value = '';
+
+        // If there's only one row, ensure its suggestion box ID is correct
+        const suggestionsBox = firstIngredientDiv.querySelector('.autocomplete');
+        if (suggestionsBox) suggestionsBox.id = 'suggestions-0';
+      }
       
-      // Disable the submit button
-      document.getElementById('submit-btn').disabled = true;
+      updateAllIngredientRowIndices(); // Good to call after clearing to be sure
+      updateSubmitButtonState(); 
     }
   </script>
 {% endblock head_extra %}
@@ -180,23 +284,23 @@
     <form onsubmit="handleSubmit(event)">
       <div class="mb-4">
         <label for="recipe_name"
-               class="block text-sm font-medium text-gray-700 mb-1">Recipe Name</label>
+               class="block text-xl font-medium text-gray-700 mb-1">Recipe Name</label>
         <input type="text"
                id="recipe_name"
                name="recipe_name"
+                placeholder="Enter recipe name"
                required
-               class="w-full p-2 border rounded"
-               oninput="disableSubmit()">
+               class="w-full p-2 border rounded">
       </div>
       <h2 class="text-xl font-semibold mb-2">Ingredients</h2>
       <div id="ingredients">
-        <div class="flex gap-2 mb-2 relative">
+        <!-- Initial ingredient field (template for the first one) -->
+        <div class="ingredient-row flex gap-2 mb-2 relative items-center">
           <div class="w-full relative">
             <input type="text"
                    name="ingredient"
                    placeholder="Ingredient"
                    class="ingredient-input w-full p-2 border rounded"
-                   oninput="disableSubmit(); hideSuggestions(0)"
                    data-index="0" />
             <div class="autocomplete bg-white border border-gray-300 rounded absolute w-full z-10 hidden max-h-40 overflow-y-auto"
                  id="suggestions-0"></div>
@@ -204,22 +308,25 @@
           <input type="text"
                  name="amount"
                  placeholder="Amount"
-                 class="w-1/3 p-2 border rounded"
-                 oninput="disableSubmit()" />
+                 class="w-1/3 p-2 border rounded" />
+          <button type="button"
+                  onclick="removeIngredientField(this)"
+                  class="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs">Remove</button>
         </div>
       </div>
       <div class="flex justify-center space-x-2 my-4">
         <button type="button"
                 onclick="addIngredientField()"
                 class="mb-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">+ Add Ingredient</button>
-        <button type="button"
-                onclick="checkIngredients()"
-                class="mb-2 px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Check Ingredients</button>
+        <!-- "Check Ingredients" button is removed as suggestions are live -->
       </div>
       <div class="flex justify-center space-x-2">
         <button id="submit-btn"
                 type="submit"
-                class="px-6 py-2 bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer ">
+                class="px-6 py-2 bg-green-500 text-white rounded cursor-pointer"
+                disabled
+                title="Please fill in all required fields: Recipe Name, and at least one Ingredient with Name and Amount.">
+          <!-- Initially disabled, JS will enable it and manage classes/title -->
           Submit Recipe
         </button>
         <button type="button"
