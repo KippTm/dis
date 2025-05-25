@@ -1,57 +1,52 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}My Site{% endblock title %}</title>
-    <meta name="description" content="{% block meta_description %}Discover and share recipes, and calculate their CO2 impact.{% endblock meta_description %}">
-    <meta name="keywords" content="{% block meta_keywords %}recipes, cooking, co2, food, impact{% endblock meta_keywords %}">
-    <script src="https://cdn.tailwindcss.com"></script>
-    {% block head_extra %}{% endblock head_extra %}
-</head>
-<body class="bg-gray-100 min-h-screen pt-20 px-4 flex flex-col items-center">
-
-    <!-- Navbar -->
-    <nav class="fixed top-0 left-0 w-full bg-white shadow-md py-4 px-6 flex justify-center space-x-4 z-50">
-        <form action="/" method="GET">
-            <button
-                type="submit"
-                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition {% if request.path == '/new_recipe' %}bg-blue-700{% endif %}"
-            >
-                Home
-            </button>
-        </form>
-        <form action="/new_recipe" method="GET">
-            <button
-                type="submit"
-                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition {% if request.path == '/new_recipe' %}bg-green-700{% endif %}"
-            >
-                Add Recipe
-            </button>
-        </form>
-        <form action="/find_recipe" method="GET">
-            <button
-                type="submit"
-                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition {% if request.path == '/find_recipe' %}bg-green-700{% endif %}"
-            >
-                Find Recipe
-            </button>
-        </form>
-        <form action="/profile" method="GET">
-            <button
-                type="submit"
-                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition {% if request.path == '/profile' %}bg-green-700{% endif %}"
-            >
-                Profile
-            </button>
-        </form>
-    </nav>
-
-    <main class="w-full mt-16">
-        {% block content %}
-        <!-- Page-specific content will go here -->
-        {% endblock content %}
-    </main>
-
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            {% block title %}
+                My Site
+            {% endblock title %}
+        </title>
+        <meta name="description"
+              content="{% block meta_description %}Discover and share recipes, and calculate their CO2 impact.{% endblock meta_description %}">
+        <meta name="keywords"
+              content="{% block meta_keywords %}recipes, cooking, co2, food, impact{% endblock meta_keywords %}">
+        <script src="https://cdn.tailwindcss.com"></script>
+        {% block head_extra %}
+        {% endblock head_extra %}
+    </head>
+    <body class="bg-gray-100 min-h-screen pt-20 px-4 flex flex-col items-center">
+        <!-- Navbar -->
+        <nav class="fixed top-0 left-0 w-full bg-white shadow-md py-4 px-6 flex justify-center space-x-4 z-50">
+            <form action="/" method="GET">
+                <button type="submit"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition {% if request.path == '/new_recipe' %}bg-blue-700{% endif %}">
+                    Home
+                </button>
+            </form>
+            <form action="/new_recipe" method="GET">
+                <button type="submit"
+                        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition {% if request.path == '/new_recipe' %}bg-green-700{% endif %}">
+                    Add Recipe
+                </button>
+            </form>
+            <form action="/find_recipe" method="GET">
+                <button type="submit"
+                        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition {% if request.path == '/find_recipe' %}bg-green-700{% endif %}">
+                    Find Recipe
+                </button>
+            </form>
+            <form action="/profile" method="GET">
+                <button type="submit"
+                        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition {% if request.path == '/profile' %}bg-green-700{% endif %}">
+                    Profile
+                </button>
+            </form>
+        </nav>
+        <main class="w-full mt-16">
+            {% block content %}
+                <!-- Page-specific content will go here -->
+            {% endblock content %}
+        </main>
+    </body>
 </html>
