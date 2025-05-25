@@ -170,33 +170,36 @@ def check_ingredients():
     result_list = []
 
     for ingredient_item in ingredient_list:
-        ingredient_name = ingredient_item.get("name", "").strip()
+        ingredient_name_raw = ingredient_item.get("name", "").strip()
 
-        if not ingredient_name:
+        if not ingredient_name_raw:
             result_list.append({"name": []})
             continue
 
-        search_term = f"{ingredient_name.lower()}%"
+        # Escape the raw ingredient name to treat it as a literal string in regex
+        # This prevents characters like '.', '+', '*' etc., from being interpreted as regex operators.
+        # The ~* operator in PostgreSQL will handle case-insensitivity.
+        regex_pattern = re.escape(ingredient_name_raw)
 
+        # Using ~* for case-insensitive regex matching in PostgreSQL.
+        # The pattern will find the exact sequence of (escaped) ingredient_name_raw anywhere.
         fetch_food_query = """
             SELECT name 
             FROM food 
-            WHERE LOWER(name) LIKE :search_term
+            WHERE name ~* :pattern
             ORDER BY name 
             LIMIT 10
         """
 
         try:
             rows = db.session.execute(
-                text(fetch_food_query), {"search_term": search_term}
+                text(fetch_food_query), {"pattern": regex_pattern}
             )
             names = [row[0] for row in rows]
-            result_list.append(
-                {"name": names if names else []}
-            )  # Ensure an empty list if no matches
+            result_list.append({"name": names if names else []})
         except Exception as e:
             print(f"Error fetching ingredient suggestions: {e}")
-            result_list.append({"name": []})  # Return empty list on error
+            result_list.append({"name": []})
 
     return jsonify(result_list)
 
