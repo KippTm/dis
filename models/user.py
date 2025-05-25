@@ -1,23 +1,32 @@
 from sqlalchemy import text
 from db import db
-
-# It's highly recommended to use a password hashing library like bcrypt or werkzeug.security
-# from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash,
+)
 
 
 class User:
-    def __init__(self, username, password, user_id=None):
+    def __init__(self, username, user_id=None):
         self.user_id = user_id
         self.username = username
-        self.password = (
-            password  # In a real application, this should be a hashed password
-        )
+        self.password_hash = None
+
+    def set_password(self, password):
+        """Hashes the plain password and stores it in self.password_hash."""
+        self.password_hash = generate_password_hash(password)
 
     def try_create_user(self):
         """
-        Attempts to create a new user in the database.
+        Attempts to create a new user in the database with a hashed password.
         Returns True if successful, False if the user already exists or an error occurs.
         """
+        if not self.password_hash:
+            print(
+                "Error: Password hash not set. Call set_password() before try_create_user()."
+            )
+            return False
+
         # Check if user already exists
         check_user_query = "SELECT username FROM Users WHERE username = :username"
         existing_user = db.session.execute(
@@ -26,49 +35,46 @@ class User:
         if existing_user:
             return False  # User already exists
 
-        # In a real application, hash the password before storing it:
-        # self.password_hash = generate_password_hash(self.password)
-        # Then store self.password_hash instead of self.password
         insert_user_query = (
-            "INSERT INTO Users (username, password) VALUES (:username, :password)"
+            "INSERT INTO Users (username, password) VALUES (:username, :password_hash)"
         )
         try:
-            with db.session.begin():
-                db.session.execute(
-                    text(insert_user_query),
-                    {
-                        "username": self.username,
-                        "password": self.password,
-                    },  # Store self.password_hash
-                )
+            db.session.execute(
+                text(insert_user_query),
+                {
+                    "username": self.username,
+                    "password_hash": self.password_hash,
+                },
+            )
+            db.session.commit()  # Commit the transaction
             return True
         except Exception as e:
-            db.session.rollback()  # Rollback in case of error
+            db.session.rollback()  # Rollback in case of any error
             print(f"Error creating user: {e}")
             return False
 
     @staticmethod
     def find_by_username(username):
-        """Finds a user by their username."""
-        # Assuming Users table only has username and password columns for now
+        """
+        Finds a user by their username.
+        Loads the username and password hash from the database.
+        The 'password' column in the database is assumed to store the hash.
+        """
+
         query = "SELECT username, password FROM Users WHERE username = :username"
         result = db.session.execute(text(query), {"username": username}).fetchone()
         if result:
-            # user_id will be None as it's not fetched from the DB
-            return User(username=result[0], password=result[1], user_id=None)
+            user = User(username=result[0])
+            user.password_hash = result[1]
+            return user
         return None
 
     def check_password(self, password_to_check):
-        """
-        Checks the provided password against the stored password (hash).
-        Replace this with proper hash checking.
-        """
-        # return check_password_hash(self.password, password_to_check) # self.password would be the stored hash
-        return (
-            self.password == password_to_check
-        )  # This is insecure for plain text passwords
+        """Checks the provided plain password against the stored hash."""
+        if not self.password_hash:
+            return False  # No stored hash to compare against
+        return check_password_hash(self.password_hash, password_to_check)
 
-    # Example of how login logic could be moved to the model:
     @staticmethod
     def authenticate(username, password):
         """Authenticates a user. Returns User object if valid, None otherwise."""
