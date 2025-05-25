@@ -88,17 +88,24 @@ def find_recipe_page():
     """Renders the find recipe page."""
 
     search_query = request.args.get("query", "").strip()
-    # For checkboxes, request.args.getlist will get all values for 'category'
-    selected_cats = request.args.getlist("category")
+    selected_category_from_form = request.args.get("category", "").strip()
 
-    # Fetch all available categories for the filter UI
     all_food_categories = Food.get_all_categories()
-
     found_recipes = []
-    # Perform search only if there's a search query or categories are selected
-    if search_query or selected_cats:
+
+    search_attempted = "query" in request.args or "category" in request.args
+
+    if search_attempted:
+        effective_query_term = search_query
+        effective_selected_category = selected_category_from_form
+
+        if selected_category_from_form == "":
+            effective_query_term = ""
+            # effective_selected_category is already "" which is fine for the model
+
         found_recipes = Recipe.search_recipes(
-            query_term=search_query, selected_categories=selected_cats
+            query_term=effective_query_term,
+            selected_category=effective_selected_category,  # CHANGED to singular
         )
 
     return render_template(
@@ -106,7 +113,8 @@ def find_recipe_page():
         results=found_recipes,
         search_query=search_query,
         all_categories=all_food_categories,
-        selected_categories=selected_cats,  # Pass back selected categories to re-check boxes
+        selected_category=selected_category_from_form,  # CHANGED to singular
+        search_attempted=search_attempted,
     )
 
 

@@ -102,43 +102,39 @@ class Recipe:
         return [{"recipe_name": row[0], "author": row[1]} for row in results]
 
     @staticmethod
-    def search_recipes(query_term="", selected_categories=None):
+    def search_recipes(query_term="", selected_category=None):  # CHANGED to singular
         """
-        Searches for recipes by name and optionally filters by food categories.
+        Searches for recipes by name and optionally filters by a single food category.
         Returns a list of dicts with 'recipe_name' and 'author'.
         """
         params = {}
 
-        # Base query to select distinct recipes
         sql_query_parts = ["SELECT DISTINCT r.recipe_name, r.author", "FROM Recipe r"]
-
         conditions = []
 
         if query_term:
             params["query_term"] = f"%{query_term}%"
             conditions.append("r.recipe_name ILIKE :query_term")
 
-        if selected_categories and len(selected_categories) > 0:
-            # Ensure selected_categories is a tuple for SQL IN clause
-            params["selected_categories"] = tuple(selected_categories)
+        if selected_category:  # CHANGED: check if singular category is present
+            params["selected_category"] = selected_category  # CHANGED to singular
 
-            # Subquery to check if the recipe contains any ingredient from the selected categories
+            # Subquery to check if the recipe contains any ingredient from the selected category
             category_filter_subquery = """
                 EXISTS (
                     SELECT 1
                     FROM Recipe_Content rc
                     JOIN Food f ON rc.food_id = f.food_id
                     WHERE rc.recipe_author = r.author AND rc.recipe_name = r.recipe_name
-                    AND f.category IN :selected_categories
+                    AND LOWER(f.category) = LOWER(:selected_category)
                 )
-            """
+            """  # CHANGED: f.category = :selected_category (and added LOWER for case-insensitivity)
             conditions.append(category_filter_subquery)
 
         if conditions:
             sql_query_parts.append("WHERE " + " AND ".join(conditions))
 
         sql_query_parts.append("ORDER BY r.recipe_name")
-
         final_query = " ".join(sql_query_parts)
 
         results = db.session.execute(text(final_query), params).fetchall()

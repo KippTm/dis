@@ -1,12 +1,17 @@
-from sqlalchemy import text
-from db import db
+"""User model for managing user authentication and data storage in a database."""
+
 from werkzeug.security import (
     generate_password_hash,
     check_password_hash,
 )
+from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
+from db import db
 
 
 class User:
+    """Represents a user in the system with methods for authentication and user management."""
+
     def __init__(self, username, user_id=None):
         self.user_id = user_id
         self.username = username
@@ -48,8 +53,9 @@ class User:
             )
             db.session.commit()  # Commit the transaction
             return True
-        except Exception as e:
+        except SQLAlchemyError as e:
             db.session.rollback()  # Rollback in case of any error
+            print(f"Error creating user: {e}")
             print(f"Error creating user: {e}")
             return False
 
@@ -104,7 +110,7 @@ class User:
 #             SELECT * FROM Recipe
 #             WHERE author = :author AND recipe_name = :recipe_name
 #         """
-#         result = db.session.execute(text(query), {"author": self.username, "recipe_name": f"%{recipe_name}%"})
+
 #         return result.fetchone()
 
 #     def get_recipes(self, recipe_name):
@@ -112,14 +118,14 @@ class User:
 #             SELECT * FROM Recipe
 #             WHERE author = :author
 #         """
-#         result = db.session.execute(text(query), {"author": self.username, "recipe_name": f"%{recipe_name}%"})
+
 #         return result.fetchall()
 
 #         # returns a bool to check for
 #     def try_create_user(self) -> bool:
 #         try:
 #             insert_query = "INSERT INTO Users (username, password) VALUES (:username, :password)"
-#             db.session.execute(text(insert_query), {"username": self.username, "password": self.password})
+
 #             db.session.commit()
 #             return True
 #         except:
