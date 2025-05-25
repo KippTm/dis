@@ -1,40 +1,178 @@
 <!-- filepath: d:\Datalogi\DIS\assignments\project\dis\views\signup.html -->
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Food Site - Sign Up</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-    </head>
-    <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+{% extends "base.html" %}
+{% block title %}
+    Sign Up - Food Site
+{% endblock title %}
+{% block navbar %}
+    <!-- This empty block overrides the navbar from base.html -->
+{% endblock navbar %}
+{% block content %}
+    <div class="flex items-center justify-center py-8">
         <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
             <h1 class="text-3xl font-bold text-center text-green-600 mb-6">Sign Up</h1>
-            <form action="/signup" method="POST" class="space-y-4">
-                <input type="text"
-                       name="username"
-                       placeholder="Enter Username"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
-                <input type="password"
-                       name="pass"
-                       placeholder="Enter Password"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
-                <input type="password"
-                       name="conf"
-                       placeholder="Confirm Password"
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+            <form action="{{ url_for("auth_bp.signup") }}"
+                  method="POST"
+                  class="space-y-4"
+                  id="signupForm"
+                  novalidate>
+                <div>
+                    <input type="text"
+                           name="username"
+                           id="username"
+                           placeholder="Enter Username"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                           required
+                           minlength="4"
+                           maxlength="20"
+                           pattern="^[a-zA-Z0-9_]{4,20}$"
+                           title="Username must be 4-20 characters and can only contain letters, numbers, and underscores." />
+                    <p id="usernameHelp" class="text-xs text-red-500 mt-1 invisible h-4">
+                        4-20 characters. Letters, numbers, and underscores only.
+                    </p>
+                </div>
+                <div>
+                    <input type="password"
+                           name="pass"
+                           id="pass"
+                           placeholder="Enter Password"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                           required
+                           minlength="8"
+                           pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d\S]{8,}$"
+                           title="Password must be at least 8 characters long and include at least one letter and one number." />
+                    <p id="passwordHelp" class="text-xs text-red-500 mt-1 invisible h-4">
+                        Min. 8 characters, at least one letter and one number.
+                    </p>
+                </div>
+                <div>
+                    <input type="password"
+                           name="conf"
+                           id="conf"
+                           placeholder="Confirm Password"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                           required
+                           minlength="8"
+                           title="Please re-enter your password." />
+                    <p id="passwordMatchError"
+                       class="text-xs text-red-500 mt-1 invisible h-4">Passwords do not match.</p>
+                    <p id="confirmPasswordHelp"
+                       class="text-xs text-red-500 mt-1 invisible h-4">Please re-enter your password to confirm.</p>
+                </div>
                 <button type="submit"
-                        class="w-full bg-green-500 text-white font-semibold py-2 rounded-lg hover:bg-green-600 transition">
-                    Register
-                </button>
+                        id="registerButton"
+                        class="w-full bg-green-500 text-white font-semibold py-2 rounded-lg hover:bg-green-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled>Register</button>
                 {% if error %}<div class="text-red-500 text-sm mt-2 text-center">{{ error }}</div>{% endif %}
             </form>
             <div class="mt-6 text-center">
                 <p class="text-sm text-gray-600">Already have an account?</p>
                 <a href="{{ url_for("auth_bp.login") }}"
-                   class="inline-block mt-2 w-full bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition">
+                   class="inline-block mt-2 w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition">
                     Go to Login
                 </a>
             </div>
         </div>
-    </body>
-</html>
+    </div>
+{% endblock content %}
+{% block head_extra %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('signupForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('pass');
+        const confirmPasswordInput = document.getElementById('conf');
+        const registerButton = document.getElementById('registerButton');
+
+        const usernameHelp = document.getElementById('usernameHelp');
+        const passwordHelp = document.getElementById('passwordHelp');
+        const confirmPasswordHelp = document.getElementById('confirmPasswordHelp');
+        const passwordMatchError = document.getElementById('passwordMatchError');
+
+        let isHoveringRegisterButton = false;
+        let canShowHelpAfterKeystrokeDelay = false;
+        let keystrokeDelayTimer = null;
+
+        function updateVisuals() {
+            const passwordsMatch = passwordInput.value === confirmPasswordInput.value;
+            
+            if (confirmPasswordInput.value.length > 0 && !passwordsMatch) {
+                confirmPasswordInput.setCustomValidity("Passwords do not match.");
+            } else {
+                confirmPasswordInput.setCustomValidity("");
+            }
+
+            const isFormValid = form.checkValidity();
+            registerButton.disabled = !isFormValid;
+
+            const shouldRevealAnyHelp = isHoveringRegisterButton || canShowHelpAfterKeystrokeDelay;
+
+            // Username help text
+            if (!usernameInput.checkValidity() && shouldRevealAnyHelp) {
+                usernameHelp.classList.remove('invisible');
+            } else {
+                usernameHelp.classList.add('invisible');
+            }
+
+            // Password help text
+            if (!passwordInput.checkValidity() && shouldRevealAnyHelp) {
+                passwordHelp.classList.remove('invisible');
+            } else {
+                passwordHelp.classList.add('invisible');
+            }
+            
+            // Confirm password help text & mismatch error
+            passwordMatchError.classList.add('invisible'); 
+            confirmPasswordHelp.classList.add('invisible'); 
+
+            if (shouldRevealAnyHelp) {
+                if (confirmPasswordInput.value.length > 0 && !passwordsMatch) {
+                    passwordMatchError.classList.remove('invisible');
+                } else { // Passwords match or confirm field is empty
+                    if (!confirmPasswordInput.checkValidity()) { // Invalid for other reasons (e.g. empty but required)
+                        confirmPasswordHelp.classList.remove('invisible');
+                    }
+                }
+            }
+        }
+
+        registerButton.addEventListener('mouseenter', () => {
+            isHoveringRegisterButton = true;
+            updateVisuals();
+        });
+
+        registerButton.addEventListener('mouseleave', () => {
+            isHoveringRegisterButton = false;
+            updateVisuals(); 
+        });
+
+        function handleKeystroke() {
+            clearTimeout(keystrokeDelayTimer); 
+            canShowHelpAfterKeystrokeDelay = false; 
+            updateVisuals(); 
+
+            keystrokeDelayTimer = setTimeout(() => {
+                canShowHelpAfterKeystrokeDelay = true;
+                updateVisuals(); 
+            }, 5000); 
+        }
+
+        [usernameInput, passwordInput, confirmPasswordInput].forEach(input => {
+            input.addEventListener('input', handleKeystroke); // Simplified: handleKeystroke calls updateVisuals
+        });
+        
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                canShowHelpAfterKeystrokeDelay = true; 
+                updateVisuals();
+                
+                if (!usernameInput.checkValidity()) usernameInput.focus();
+                else if (!passwordInput.checkValidity()) passwordInput.focus();
+                else if (!confirmPasswordInput.checkValidity()) confirmPasswordInput.focus();
+            }
+        });
+
+        updateVisuals(); // Initial check
+    });
+    </script>
+{% endblock head_extra %}
