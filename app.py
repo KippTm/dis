@@ -1,12 +1,21 @@
-from flask import Flask, render_template, abort, request, make_response, redirect, jsonify
+from flask import (
+    Flask,
+    render_template,
+    abort,
+    request,
+    make_response,
+    redirect,
+    jsonify,
+)
 from models.user import User
 from sqlalchemy import text
 from db import db
 import re
 
 app = Flask(__name__, template_folder="views")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres@localhost/recipe_site'
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres@localhost/recipe_site"
 db.init_app(app)
+
 
 def render_temp(temp):
     try:
@@ -14,26 +23,32 @@ def render_temp(temp):
     except:
         abort(404)
 
-@app.route("/",)
+
+@app.route(
+    "/",
+)
 def main():
-    user_cookie = request.cookies.get('user')
+    user_cookie = request.cookies.get("user")
     if user_cookie:
         return render_temp("index")
     return redirect("/login")
 
-@app.route("/login", methods=['GET', 'POST'])
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
         query = """
             SELECT * FROM Users
             WHERE username = :username AND password = :password
         """
-        result = db.session.execute(text(query), {"username": username, "password": password})
-        if (result.fetchone()):
+        result = db.session.execute(
+            text(query), {"username": username, "password": password}
+        )
+        if result.fetchone():
             resp = make_response(redirect("/"))
-            resp.set_cookie('user', username)
+            resp.set_cookie("user", username)
             return resp
         err = "User does not exist"
         render_template("login.html", error=err)
@@ -41,34 +56,94 @@ def login():
     return render_temp("login")
 
 
-@app.route("/signup", methods=['GET', 'POST'])
+@app.route("/signup", methods=["GET", "POST"])
 def signup():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('pass')
-        confirm = request.form.get('conf')
-        if (confirm != password):
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("pass")
+        confirm = request.form.get("conf")
+        if confirm != password:
             err = "Password and confirmation do not match"
             return render_template("signup.html", error=err)
-            
+
         new_user = User(username, password)
         succ = new_user.try_create_user()
         if not succ:
             err = "User already exists"
             return render_template("signup.html", error=err)
         return redirect("/login")
-             
-            #return f"User creation unsuccesful"
+
+        # return f"User creation unsuccesful"
 
     return render_temp("signup")
 
-@app.route("/new_recipe", methods=['GET'])
+
+@app.route("/new_recipe", methods=["GET"])
 def add_recipe():
     return render_temp("new_recipe")
 
-@app.route("/new_recipe", methods=['POST'])
+
+@app.route("/new_recipe", methods=["POST"])
 def add_recipe_post():
-    return render_temp("new_recipe")
+    # Get user from cookie
+    user = request.cookies.get("user")
+    if not user:
+        return jsonify({"error": "Not logged in"}), 401
+
+    # Get data from request
+    data = request.json
+    recipe_name = data.get("recipe_name")
+    ingredients = data.get("ingredients", [])
+
+    # Validate recipe name
+    if not recipe_name:
+        return jsonify({"error": "Recipe name is required"}), 400
+
+    try:
+        with db.session.begin():
+            insert_recipe_query = """
+                INSERT INTO Recipe (author, recipe_name)
+                VALUES (:author, :recipe_name)
+            """
+            db.session.execute(
+                text(insert_recipe_query), {"author": user, "recipe_name": recipe_name}
+            )
+
+            # Insert ingredients
+            for ingredient in ingredients:
+                # Find the food_id for this ingredient
+                find_food_query = """
+                    SELECT food_id FROM Food WHERE LOWER(name) = LOWER(:name) LIMIT 1
+                """
+                result = db.session.execute(
+                    text(find_food_query), {"name": ingredient["name"]}
+                )
+                food_row = result.fetchone()
+
+                if food_row:
+                    food_id = food_row[0]
+                    # Insert into Recipe_Content table
+                    insert_recipe_content_query = """
+                        INSERT INTO Recipe_Content (recipe_name, recipe_author, food_id, amount)
+                        VALUES (:recipe_name, :recipe_author, :food_id, :amount)
+                    """
+                    db.session.execute(
+                        text(insert_recipe_content_query),
+                        {
+                            "recipe_name": recipe_name,
+                            "recipe_author": user,
+                            "food_id": food_id,
+                            "amount": ingredient["amount"],
+                        },
+                    )
+
+        return jsonify({"success": True})
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error saving recipe: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route("/check-ingredients", methods=["POST"])
 def check_ingredients():
@@ -86,7 +161,9 @@ def check_ingredients():
         max_count = 0
         fetch_food_query = """SELECT food_id, name, category, emission FROM food WHERE LOWER(name) LIKE :name"""
         for word in match:
-            result = db.session.execute(text(fetch_food_query), {"name": f"%{word.lower()}%"})
+            result = db.session.execute(
+                text(fetch_food_query), {"name": f"%{word.lower()}%"}
+            )
             for row in result:
                 word_count[row[0]] = word_count.get(row[0], 0) + 1
                 if word_count[row[0]] > max_count:
@@ -98,27 +175,32 @@ def check_ingredients():
             result_list.append({"name": ""})
             continue
         get_common_food = """SELECT food_id, name FROM food WHERE food_id IN :food_id"""
-        
+
         rows = db.session.execute(text(get_common_food), {"food_id": tuple(freq_words)})
         names = [row[1] for row in rows]
         result_list.append({"name": names})
     return jsonify(result_list)
 
+
 @app.route("/profile")
 def profile():
-    user = request.cookies.get('user')
+    user = request.cookies.get("user")
     get_user_recipes = """ SELECT recipe_name FROM Recipe WHERE author = :user """
     recipes = db.session.execute(text(get_user_recipes), {"user": user})
     return render_template("profile.html", user=user, recipes=recipes)
+
 
 @app.route("/find_recipe")
 def find_recipe():
     query = request.args.get("query")
     results = []
     if query:
-        recipe_search = """ SELECT recipe_name FROM Recipe WHERE recipe_name = :query """
-        results = db.session.execute(text(recipe_search), {"query" : query})
+        recipe_search = (
+            """ SELECT recipe_name FROM Recipe WHERE recipe_name = :query """
+        )
+        results = db.session.execute(text(recipe_search), {"query": query})
     return render_template("find.html", results=results)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     app.run(port=8000, debug=True)
