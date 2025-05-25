@@ -1,90 +1,150 @@
-
 {% extends "base.html" %}
-
 {% block title %}
     Find Recipe - Recipe Site
 {% endblock title %}
-
 {% block meta_description %}
     Search for specific recipes on our site using name and category filters. Find your next favorite meal!
 {% endblock meta_description %}
-
 {% block meta_keywords %}
     find recipe, search recipe, recipe lookup, filter recipes, food categories
 {% endblock meta_keywords %}
+{% block head_extra %}
+    <script>
+    function handleRecipeNameInput(inputElement) {
+        const query = inputElement.value.trim();
+        const suggestionsBox = document.getElementById('recipe-name-suggestions');
+        
+        // Clear previous suggestions and hide
+        suggestionsBox.innerHTML = '';
+        suggestionsBox.classList.add('hidden');
 
+        if (query.length < 2) { // Only search if query is at least 2 chars
+            return;
+        }
+
+        fetch("{{ url_for('recipe_bp.recipe_name_suggestions') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ query: query })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (Array.isArray(data) && data.length > 0) {
+                data.forEach(suggestion => {
+                    const item = document.createElement('div');
+                    item.textContent = suggestion;
+                    item.className = 'cursor-pointer p-2 hover:bg-gray-100 border-b last:border-b-0';
+                    item.onclick = () => {
+                        inputElement.value = suggestion;
+                        suggestionsBox.innerHTML = '';
+                        suggestionsBox.classList.add('hidden');
+                    };
+                    suggestionsBox.appendChild(item);
+                });
+                suggestionsBox.classList.remove('hidden');
+            }
+        })
+        .catch(error => console.error('Error fetching recipe name suggestions:', error));
+    }
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(event) {
+        const suggestionsBox = document.getElementById('recipe-name-suggestions');
+        const recipeNameInput = document.getElementById('query');
+        if (suggestionsBox && recipeNameInput) {
+            if (!suggestionsBox.contains(event.target) && event.target !== recipeNameInput) {
+                suggestionsBox.innerHTML = '';
+                suggestionsBox.classList.add('hidden');
+            }
+        }
+    });
+    </script>
+{% endblock head_extra %}
 {% block content %}
-<div class="w-full max-w-3xl bg-white shadow-lg rounded-2xl p-6 md:p-8 mt-4 mx-auto">
-    <h1 class="text-3xl font-bold text-green-600 mb-6 text-center">Find a Recipe</h1>
-
-    <form method="get" action="{{ url_for('recipe_bp.find_recipe_page') }}" class="space-y-6">
-        <!-- Search by Name -->
-        <div>
-            <label for="query" class="block text-sm font-medium text-gray-700 mb-1">Recipe Name</label>
-            <input type="text"
-                   id="query"
-                   name="query"
-                   value="{{ search_query or '' }}"
-                   placeholder="Enter recipe name (optional)"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" />
-        </div>
-
-        <!-- Filter by Category Dropdown -->
-        {% if all_categories %}
-        <div>
-            <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-            <select id="category"
-                    name="category"
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
-                <option value="">All Categories</option> {# Default empty value for no filter #}
-                {% for category_item in all_categories %}
-                <option value="{{ category_item }}" {% if category_item == selected_category %}selected{% endif %}>
-                    {{ category_item }}
-                </option>
-                {% endfor %}
-            </select>
-        </div>
+    <div class="w-full max-w-3xl bg-white shadow-lg rounded-2xl p-6 md:p-8 mt-4 mx-auto">
+        <h1 class="text-3xl font-bold text-green-600 mb-6 text-center">Find a Recipe</h1>
+        <form method="GET"
+              action="{{ url_for("recipe_bp.find_recipe_page") }}"
+              class="space-y-6">
+            <!-- Search by Name -->
+            <div class="relative">
+                <label for="query" class="block text-sm font-medium text-gray-700 mb-1">Recipe Name</label>
+                <input type="text"
+                       id="query"
+                       name="query"
+                       value="{{ search_query or '' }}"
+                       placeholder="Enter recipe name (optional)"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                       oninput="handleRecipeNameInput(this)"
+                       autocomplete="off" />
+                <div id="recipe-name-suggestions"
+                     class="autocomplete bg-white border border-gray-300 rounded absolute w-full z-10 hidden max-h-60 overflow-y-auto shadow-lg mt-1">
+                    <!-- Suggestions will be populated here -->
+                </div>
+            </div>
+            <!-- Filter by Category Dropdown -->
+            {% if all_categories %}
+                <div>
+                    <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                    <select id="category"
+                            name="category"
+                            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                        <option value="">All Categories</option>
+                        {# Default empty value for no filter #}
+                        {% for category_item in all_categories %}
+                            <option value="{{ category_item }}"
+                                    {% if category_item == selected_category %}selected{% endif %}>
+                                {{ category_item }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+            <!-- Sort by CO2 Emission -->
+            <div>
+                <label for="sort_emission"
+                       class="block text-sm font-medium text-gray-700 mb-1">Sort by CO₂ Emission</label>
+                <select id="sort_emission"
+                        name="sort_emission"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
+                    <option value="" {% if not selected_sort_emission %}selected{% endif %}>None</option>
+                    <option value="lowest"
+                            {% if selected_sort_emission == "lowest" %}selected{% endif %}>Lowest CO₂ First</option>
+                    <option value="highest"
+                            {% if selected_sort_emission == "highest" %}selected{% endif %}>Highest CO₂ First</option>
+                </select>
+            </div>
+            <!-- Submit Button -->
+            <div class="pt-2 text-center">
+                <button type="submit"
+                        class="bg-green-500 text-white px-8 py-2.5 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition text-lg font-medium">
+                    Search Recipes
+                </button>
+            </div>
+        </form>
+        <!-- Search Results -->
+        {% if search_attempted %}
+            {# Check if a search was actually performed #}
+            {% if results %}
+                <h2 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Search Results:</h2>
+                <ul class="space-y-4">
+                    {% for recipe in results %}
+                        <li class="p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">
+                            <a href="{{ url_for('recipe_bp.view_recipe', author_username=recipe.author, recipe_name_str=recipe.recipe_name) }}"
+                               class="text-xl text-green-700 hover:text-green-800 font-semibold block mb-1">
+                                {{ recipe.recipe_name }}
+                            </a>
+                            <span class="text-sm text-gray-600">by {{ recipe.author }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                {# Search was attempted, but results list is empty #}
+                <p class="text-gray-600 italic text-center mt-8 text-lg">No recipes found matching your criteria.</p>
+            {% endif %}
         {% endif %}
-
-        <!-- Sort by CO2 Emission -->
-        <div>
-            <label for="sort_emission" class="block text-sm font-medium text-gray-700 mb-1">Sort by CO₂ Emission</label>
-            <select id="sort_emission"
-                    name="sort_emission"
-                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
-                <option value="" {% if not selected_sort_emission %}selected{% endif %}>None</option>
-                <option value="lowest" {% if selected_sort_emission == "lowest" %}selected{% endif %}>Lowest CO₂ First</option>
-                <option value="highest" {% if selected_sort_emission == "highest" %}selected{% endif %}>Highest CO₂ First</option>
-            </select>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="pt-2 text-center">
-            <button type="submit"
-                    class="bg-green-500 text-white px-8 py-2.5 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition text-lg font-medium">
-                Search Recipes
-            </button>
-        </div>
-    </form>
-
-    <!-- Search Results -->
-    {% if search_attempted %} {# Check if a search was actually performed #}
-        {% if results %}
-            <h2 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Search Results:</h2>
-            <ul class="space-y-4">
-                {% for recipe in results %}
-                <li class="p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors">
-                    <a href="{{ url_for('recipe_bp.view_recipe', author_username=recipe.author, recipe_name_str=recipe.recipe_name) }}"
-                       class="text-xl text-green-700 hover:text-green-800 font-semibold block mb-1">
-                        {{ recipe.recipe_name }}
-                    </a>
-                    <span class="text-sm text-gray-600">by {{ recipe.author }}</span>
-                </li>
-                {% endfor %}
-            </ul>
-        {% else %} {# Search was attempted, but results list is empty #}
-            <p class="text-gray-600 italic text-center mt-8 text-lg">No recipes found matching your criteria.</p>
-        {% endif %}
-    {% endif %} {# End of search_attempted block #}
-</div>
+        {# End of search_attempted block #}
+    </div>
 {% endblock content %}

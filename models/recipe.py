@@ -90,16 +90,29 @@ class Recipe:
         return [row[0] for row in result]
 
     @staticmethod
-    def search_by_name(query_term):
-        """Searches for recipes by name using a case-insensitive search."""
-        recipe_search_query = """
-            SELECT recipe_name, author FROM Recipe WHERE recipe_name ILIKE :query
+    def search_by_name_pattern(name_pattern: str, limit: int = 5):
+        """
+        Searches for recipe names matching a given pattern.
+        Returns a list of distinct recipe names.
+        """
+        if not name_pattern:
+            return []
+
+        query = text(
+            """
+            SELECT DISTINCT recipe_name
+            FROM Recipe
+            WHERE recipe_name ILIKE :pattern
             ORDER BY recipe_name
-        """  # Using ILIKE for case-insensitive search
-        results = db.session.execute(
-            text(recipe_search_query), {"query": f"%{query_term}%"}
+            LIMIT :limit
+            """
+        )
+        # Add wildcards for ILIKE pattern matching
+        pattern_with_wildcards = f"%{name_pattern}%"
+        result = db.session.execute(
+            query, {"pattern": pattern_with_wildcards, "limit": limit}
         ).fetchall()
-        return [{"recipe_name": row[0], "author": row[1]} for row in results]
+        return [row[0] for row in result]
 
     @staticmethod
     def search_recipes(query_term="", selected_category=None, sort_by_emission=None):
@@ -112,7 +125,9 @@ class Recipe:
 
         # Core selection including CO2 calculation
         # Assuming Food.emission is kg CO2e / kg food and Recipe_Content.amount is in grams
-        # COALESCE is used to handle recipes with no ingredients or ingredients with no emission data, defaulting their emission to 0.
+        # The Co2 emission is calculated as:
+        # total_co2_emission = SUM(amount / 1000.0 * emission)
+        # where amount is in grams and emission is in kg CO2e / kg food.
         select_clause = """
             SELECT
                 r.recipe_name,
@@ -245,49 +260,3 @@ class Recipe:
             "ingredients": ingredients_details,
             "total_co2_emission": round(total_recipe_emission, 4),
         }
-
-
-# from sqlalchemy import text
-# from models.food import Food
-# from db import db
-
-# class Recipe:
-#     def __init__(self, author, recipe_name):
-#         self.foods = []
-#         self.author = author
-#         self.recipe_name = recipe_name
-
-#     # save into both tables Recipe and Recipe_Content
-#     def save_recipe(self):
-#         try:
-#             insert_recipe_query = """
-#                 INSERT INTO Recipe (author, recipe_name) VALUES (:author, :recipe_name)
-#             """
-
-
-#             for food in self.foods:
-#                 insert_ingredient_query = """
-#                     INSERT INTO Recipe_Content (recipe_name, recipe_author, food_id, amount)
-#                     VALUES (:recipe_name, :recipe_author, :food_id, :amount)
-#                 """
-#                 db.session.execute(text(insert_ingredient_query), {
-#                     "recipe_name": self.recipe_name,
-#                     "recipe_author": self.author,
-#                     "food_id": food.db_id,
-#                     "amount": food.amount
-#                 })
-
-#             db.session.commit()
-#             return True
-#         except:
-#             db.session.rollback()
-#             return False
-
-#     def get_recipe_ingredients(self):
-#         return self.foods
-
-#     def add_ingredient(self, ingredient: Food):
-#         self.foods.append(ingredient)
-
-#     def calculate_recipe_emission(self) -> float:
-#         return sum([food.get_food_emission() for food in self.foods])

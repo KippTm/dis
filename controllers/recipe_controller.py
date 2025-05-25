@@ -155,3 +155,16 @@ def view_recipe(author_username, recipe_name_str):
     except (ValueError, TypeError) as e:
         print(f"Error rendering recipe_detail.html: {e}")  # For debugging
         abort(500)
+
+
+@recipe_bp.route("/recipe_name_suggestions", methods=["POST"])
+def recipe_name_suggestions():
+    """Provides recipe name suggestions based on a partial query."""
+    data = request.json
+    query_term = data.get("query", "").strip()
+
+    if not query_term:
+        return jsonify([])
+
+    suggestions = Recipe.search_by_name_pattern(query_term)
+    return jsonify(suggestions)
