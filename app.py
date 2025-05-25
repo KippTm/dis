@@ -165,38 +165,39 @@ def add_recipe_post():
 
 @app.route("/check-ingredients", methods=["POST"])
 def check_ingredients():
-    ingredient_list = request.json["ingredients"]
+    data = request.json
+    ingredient_list = data.get("ingredients", [])
     result_list = []
-    for ingredient in ingredient_list:
-        match_word = re.compile(r"[\w\-%]+", re.UNICODE)
-        match = match_word.findall(ingredient["name"])
 
-        if len(match) == 0:
-            result_list.append({"name": ""})
+    for ingredient_item in ingredient_list:
+        ingredient_name = ingredient_item.get("name", "").strip()
+
+        if not ingredient_name:
+            result_list.append({"name": []})
             continue
-        word_count = {}
-        freq_words = set()
-        max_count = 0
-        fetch_food_query = """SELECT food_id, name, category, emission FROM food WHERE LOWER(name) LIKE :name"""
-        for word in match:
-            result = db.session.execute(
-                text(fetch_food_query), {"name": f"%{word.lower()}%"}
+
+        search_term = f"{ingredient_name.lower()}%"
+
+        fetch_food_query = """
+            SELECT name 
+            FROM food 
+            WHERE LOWER(name) LIKE :search_term
+            ORDER BY name 
+            LIMIT 10
+        """
+
+        try:
+            rows = db.session.execute(
+                text(fetch_food_query), {"search_term": search_term}
             )
-            for row in result:
-                word_count[row[0]] = word_count.get(row[0], 0) + 1
-                if word_count[row[0]] > max_count:
-                    max_count = word_count[row[0]]
-                    freq_words = {row[0]}
-                elif word_count[row[0]] == max_count:
-                    freq_words.add(row[0])
-        if max_count == 0:
-            result_list.append({"name": ""})
-            continue
-        get_common_food = """SELECT food_id, name FROM food WHERE food_id IN :food_id"""
+            names = [row[0] for row in rows]
+            result_list.append(
+                {"name": names if names else []}
+            )  # Ensure an empty list if no matches
+        except Exception as e:
+            print(f"Error fetching ingredient suggestions: {e}")
+            result_list.append({"name": []})  # Return empty list on error
 
-        rows = db.session.execute(text(get_common_food), {"food_id": tuple(freq_words)})
-        names = [row[1] for row in rows]
-        result_list.append({"name": names})
     return jsonify(result_list)
 
 
