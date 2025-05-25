@@ -1,3 +1,4 @@
+<!-- filepath: d:\Datalogi\DIS\assignments\project\dis\views\signup.html -->
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -25,13 +26,15 @@
                         class="w-full bg-green-500 text-white font-semibold py-2 rounded-lg hover:bg-green-600 transition">
                     Register
                 </button>
-                {% if error %}<div style="color: red;">{{ error }}</div>{% endif %}
+                {% if error %}<div class="text-red-500 text-sm mt-2 text-center">{{ error }}</div>{% endif %}
             </form>
-            <form action="/login" method="GET">
-                <button type="submit"
-                        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
-                    Go to login
-                </button>
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600">Already have an account?</p>
+                <a href="{{ url_for("auth_bp.login") }}"
+                   class="inline-block mt-2 w-full bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition">
+                    Go to Login
+                </a>
             </div>
-        </body>
-    </html>
+        </div>
+    </body>
+</html>
