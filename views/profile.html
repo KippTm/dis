@@ -1,42 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Recipe Site - Profile</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+{% extends "base.html" %}
 
-<body class="bg-gray-100 min-h-screen flex flex-col items-center pt-20 px-4">
-    <!-- Navbar positioned top-left -->
-    <nav class="fixed top-0 left-0 bg-white shadow-md py-4 px-6 flex space-x-4">
-        <form action="/new_recipe" method="GET">
-            <button
-                type="submit"
-                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
-            >
-                Add Recipe
-            </button>
-        </form>
-        <form action="/find_recipe" method="GET">
-            <button
-                type="submit"
-                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
-            >
-                Find Recipe
-            </button>
-        </form>
-        <form action="/profile" method="GET">
-            <button
-                type="submit"
-                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
-            >
-                Profile
-            </button>
-        </form>
-    </nav>
+{% block title %}Profile - Recipe Site{% endblock title %}
+
+{% block meta_description %}View your user profile and saved recipes.{% endblock meta_description %}
+{% block meta_keywords %}profile, user recipes, my recipes{% endblock meta_keywords %}
+
+{% block content %}
 
     <!-- Profile container -->
-    <div class="bg-white shadow-lg rounded-2xl w-full max-w-3xl p-6">
+    <div class="bg-white shadow-lg rounded-2xl w-full max-w-3xl p-6 mx-auto mt-4">
         <h1 class="text-3xl font-bold text-green-600 mb-4 text-center">
             Profile
         </h1>
@@ -64,9 +36,4 @@
             {% endif %}
         </div>
     </div>
-</body>
-
-    
-</html>
-
-
+{% endblock content %}
