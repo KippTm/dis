@@ -85,14 +85,15 @@ class Recipe:
 
     @staticmethod
     def search_by_name(query_term):
-        """Searches for recipes by name."""
+        """Searches for recipes by name and returns a list of dicts with 'recipe_name' and 'author'."""
         recipe_search_query = """
             SELECT recipe_name, author FROM Recipe WHERE recipe_name ILIKE :query
+            ORDER BY recipe_name
         """  # Using ILIKE for case-insensitive search
         results = db.session.execute(
             text(recipe_search_query), {"query": f"%{query_term}%"}
-        )
-        return [{"name": row[0], "author": row[1]} for row in results]
+        ).fetchall()
+        return [{"recipe_name": row[0], "author": row[1]} for row in results]
 
     @staticmethod
     def get_recipe_details_with_emissions(author_username, recipe_name_str):
