@@ -15,31 +15,52 @@ def add_recipe_page():
 
 @recipe_bp.route("/new_recipe", methods=["POST"])
 def add_recipe_post():
-    user = request.cookies.get("user")
-    if not user:
-        return jsonify({"error": "Not logged in"}), 401
+    user_cookie = request.cookies.get("user")
+    if not user_cookie:
+        return jsonify({"error": "User not logged in"}), 401
 
-    data = request.json
+    data = request.get_json()
     recipe_name = data.get("recipe_name")
-    ingredients_data = data.get("ingredients", [])
+    ingredients_data = data.get("ingredients")
 
-    if not recipe_name:
-        return jsonify({"error": "Recipe name is required"}), 400
+    if not recipe_name or not ingredients_data:
+        return jsonify({"error": "Missing recipe name or ingredients"}), 400
 
-    if Recipe.exists(author=user, recipe_name=recipe_name):
-        return (
-            jsonify(
-                {"error": "A recipe with this name already exists for your account."}
-            ),
-            409,
+    if Recipe.exists(user_cookie, recipe_name):
+        return jsonify({"error": "Recipe with this name already exists"}), 409
+
+    recipe = Recipe(
+        recipe_name=recipe_name, author=user_cookie, ingredients=ingredients_data
+    )
+    try:
+        recipe.save()  # Assuming this saves the recipe and its ingredients
+
+        # After successful save, fetch the full details including emissions
+        # This uses the method we created earlier for recipe_detail.html
+        saved_recipe_details = Recipe.get_recipe_details_with_emissions(
+            user_cookie, recipe_name
         )
 
-    recipe = Recipe(recipe_name=recipe_name, author=user, ingredients=ingredients_data)
-    try:
-        recipe.save()
-        return jsonify({"success": True})
+        if not saved_recipe_details:
+            # This case should ideally not be hit if save() was successful
+            return (
+                jsonify({"error": "Recipe saved, but failed to retrieve its details"}),
+                500,
+            )
+
+        return (
+            jsonify(
+                {
+                    "message": "Recipe saved successfully!",  # You can use this or generate on client
+                    "recipe": saved_recipe_details,
+                }
+            ),
+            200,
+        )  # OK
     except Exception as e:
-        return jsonify({"error": f"Failed to save recipe: {str(e)}"}), 500
+        # Log e for debugging
+        print(f"Error in add_recipe_post: {e}")
+        return jsonify({"error": "An error occurred while saving the recipe."}), 500
 
 
 @recipe_bp.route("/check-ingredients", methods=["POST"])

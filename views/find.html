@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% block title %}
     Find Recipe - Recipe Site
@@ -15,10 +16,11 @@
         <h1 class="text-3xl font-bold text-green-600 mb-6 text-center">Find a Recipe</h1>
         <!-- Search form -->
         <form method="GET"
-              action="/find_recipe"
+              action="{{ url_for('recipe_bp.find_recipe_page') }}"  {# Corrected endpoint name #}
               class="flex items-center space-x-4 mb-6">
             <input type="text"
                    name="query"
+                   value="{{ request.args.get('query', '') }}" {# Keep search query in input #}
                    placeholder="Enter recipe name"
                    class="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
             <button type="submit"
@@ -27,13 +29,20 @@
         <!-- Search Results -->
         {% if results is defined %}
             {% if results %}
+                <h2 class="text-xl font-semibold text-gray-700 mb-3">Search Results:</h2>
                 <ul class="space-y-3">
+                    
                     {% for recipe in results %}
-                        <li class="p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">{{ recipe }}</li>
+                        <li class="p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200 hover:bg-gray-100">
+                            <a href="{{ url_for('recipe_bp.view_recipe', author_username=recipe.author, recipe_name_str=recipe.recipe_name) }}" class="text-green-700 hover:text-green-800 font-medium">
+                                {{ recipe.recipe_name }}
+                            </a>
+                            <span class="text-sm text-gray-500">by {{ recipe.author }}</span>
+                        </li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p class="text-gray-500 italic text-center">No recipes found.</p>
+                <p class="text-gray-500 italic text-center">No recipes found matching your query.</p>
             {% endif %}
         {% endif %}
     </div>
