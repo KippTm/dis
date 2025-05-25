@@ -38,10 +38,7 @@ def add_recipe_post():
         recipe_name=recipe_name, author=user_cookie, ingredients=ingredients_data
     )
     try:
-        recipe.save()  # Assuming this saves the recipe and its ingredients
-
-        # After successful save, fetch the full details including emissions
-        # This uses the method we created earlier for recipe_detail.html
+        recipe.save()
         saved_recipe_details = Recipe.get_recipe_details_with_emissions(
             user_cookie, recipe_name
         )
@@ -61,9 +58,9 @@ def add_recipe_post():
                 }
             ),
             200,
-        )  # OK
+        )
     except (FileNotFoundError, TemplateNotFound) as e:
-        # Log e for debugging
+
         print(f"Error in add_recipe_post: {e}")
         return jsonify({"error": "An error occurred while saving the recipe."}), 500
 
@@ -89,23 +86,33 @@ def find_recipe_page():
 
     search_query = request.args.get("query", "").strip()
     selected_category_from_form = request.args.get("category", "").strip()
+    sort_emission = request.args.get("sort_emission", "").strip()
 
     all_food_categories = Food.get_all_categories()
     found_recipes = []
 
-    search_attempted = "query" in request.args or "category" in request.args
+    search_attempted = (
+        "query" in request.args
+        or "category" in request.args
+        or "sort_emission" in request.args
+    )
 
     if search_attempted:
         effective_query_term = search_query
         effective_selected_category = selected_category_from_form
+        effective_sort_emission = (
+            sort_emission if sort_emission in ["lowest", "highest"] else None
+        )
 
-        if selected_category_from_form == "":
+        if selected_category_from_form == "" and not sort_emission:
             effective_query_term = ""
-            # effective_selected_category is already "" which is fine for the model
+        elif selected_category_from_form == "" and sort_emission:
+            pass
 
         found_recipes = Recipe.search_recipes(
             query_term=effective_query_term,
-            selected_category=effective_selected_category,  # CHANGED to singular
+            selected_category=effective_selected_category,
+            sort_by_emission=effective_sort_emission,
         )
 
     return render_template(
@@ -113,7 +120,8 @@ def find_recipe_page():
         results=found_recipes,
         search_query=search_query,
         all_categories=all_food_categories,
-        selected_category=selected_category_from_form,  # CHANGED to singular
+        selected_category=selected_category_from_form,
+        selected_sort_emission=sort_emission,
         search_attempted=search_attempted,
     )
 

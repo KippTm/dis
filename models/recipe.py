@@ -102,43 +102,86 @@ class Recipe:
         return [{"recipe_name": row[0], "author": row[1]} for row in results]
 
     @staticmethod
-    def search_recipes(query_term="", selected_category=None):  # CHANGED to singular
+    def search_recipes(query_term="", selected_category=None, sort_by_emission=None):
         """
-        Searches for recipes by name and optionally filters by a single food category.
-        Returns a list of dicts with 'recipe_name' and 'author'.
+        Searches for recipes by name, optionally filters by category,
+        and optionally sorts by total CO2 emission.
+        Returns a list of dicts with 'recipe_name', 'author', and 'total_co2_emission'.
         """
         params = {}
 
-        sql_query_parts = ["SELECT DISTINCT r.recipe_name, r.author", "FROM Recipe r"]
+        # Core selection including CO2 calculation
+        # Assuming Food.emission is kg CO2e / kg food and Recipe_Content.amount is in grams
+        # COALESCE is used to handle recipes with no ingredients or ingredients with no emission data, defaulting their emission to 0.
+        select_clause = """
+            SELECT
+                r.recipe_name,
+                r.author,
+                COALESCE(SUM(rc.amount / 1000.0 * f.emission), 0.0) AS total_co2_emission
+        """
+
+        from_clause = """
+            FROM
+                Recipe r
+            LEFT JOIN
+                Recipe_Content rc ON r.author = rc.recipe_author AND r.recipe_name = rc.recipe_name
+            LEFT JOIN
+                Food f ON rc.food_id = f.food_id
+        """
+
+        sql_query_parts = [select_clause, from_clause]
         conditions = []
 
         if query_term:
             params["query_term"] = f"%{query_term}%"
             conditions.append("r.recipe_name ILIKE :query_term")
 
-        if selected_category:  # CHANGED: check if singular category is present
-            params["selected_category"] = selected_category  # CHANGED to singular
-
-            # Subquery to check if the recipe contains any ingredient from the selected category
+        if selected_category:
+            params["selected_category"] = selected_category
+            # This subquery ensures we filter recipes based on category presence,
+            # then the main query calculates emissions for those recipes.
             category_filter_subquery = """
                 EXISTS (
                     SELECT 1
-                    FROM Recipe_Content rc
-                    JOIN Food f ON rc.food_id = f.food_id
-                    WHERE rc.recipe_author = r.author AND rc.recipe_name = r.recipe_name
-                    AND LOWER(f.category) = LOWER(:selected_category)
+                    FROM Recipe_Content rci
+                    JOIN Food fi ON rci.food_id = fi.food_id
+                    WHERE rci.recipe_author = r.author AND rci.recipe_name = r.recipe_name
+                    AND LOWER(fi.category) = LOWER(:selected_category)
                 )
-            """  # CHANGED: f.category = :selected_category (and added LOWER for case-insensitivity)
+            """
             conditions.append(category_filter_subquery)
 
         if conditions:
             sql_query_parts.append("WHERE " + " AND ".join(conditions))
 
-        sql_query_parts.append("ORDER BY r.recipe_name")
+        # GROUP BY is necessary for the SUM() aggregation
+        sql_query_parts.append("GROUP BY r.recipe_name, r.author")
+
+        # ORDER BY clause
+        order_clause_parts = []
+        if sort_by_emission == "lowest":
+            order_clause_parts.append("total_co2_emission ASC")
+        elif sort_by_emission == "highest":
+            order_clause_parts.append("total_co2_emission DESC")
+
+        order_clause_parts.append("r.recipe_name ASC")  # Default secondary sort by name
+
+        sql_query_parts.append("ORDER BY " + ", ".join(order_clause_parts))
+
         final_query = " ".join(sql_query_parts)
 
         results = db.session.execute(text(final_query), params).fetchall()
-        return [{"recipe_name": row[0], "author": row[1]} for row in results]
+
+        return [
+            {
+                "recipe_name": row[0],
+                "author": row[1],
+                "total_co2_emission": round(
+                    Decimal(row[2] if row[2] is not None else 0.0), 3
+                ),  # Handle potential None from SUM and round
+            }
+            for row in results
+        ]
 
     @staticmethod
     def get_recipe_details_with_emissions(author_username, recipe_name_str):
