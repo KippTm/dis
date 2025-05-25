@@ -1,4 +1,7 @@
+"""Authentication controller for handling user login, signup, and logout."""
+
 from flask import Blueprint, request, make_response, redirect, render_template, abort
+from jinja2 import TemplateNotFound
 from models.user import User
 
 auth_bp = Blueprint("auth_bp", __name__)
@@ -6,6 +9,7 @@ auth_bp = Blueprint("auth_bp", __name__)
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
+    """Handles user login. If the user is already logged in, redirects to home page."""
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -19,17 +23,18 @@ def login():
         err = "User does not exist or password incorrect."
         try:
             return render_template("login.html", error=err)
-        except:
+        except (FileNotFoundError, TemplateNotFound):
             abort(404)
 
     try:
         return render_template("login.html")
-    except:
+    except (FileNotFoundError, TemplateNotFound):
         abort(404)
 
 
 @auth_bp.route("/signup", methods=["GET", "POST"])
 def signup():
+    """Handles user signup. If the user is already logged in, redirects to home page."""
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("pass")
@@ -39,7 +44,7 @@ def signup():
             err = "Password and confirmation do not match"
             try:
                 return render_template("signup.html", error=err)
-            except:
+            except (FileNotFoundError, TemplateNotFound):
                 abort(404)
 
         new_user = User(username=username)
@@ -49,7 +54,7 @@ def signup():
             err = "User already exists or error creating user."
             try:
                 return render_template("signup.html", error=err)
-            except:
+            except (FileNotFoundError, TemplateNotFound):
                 abort(404)
 
         # Log the user in by creating a response and setting the cookie
@@ -59,12 +64,13 @@ def signup():
 
     try:
         return render_template("signup.html")
-    except:
+    except (FileNotFoundError, TemplateNotFound):
         abort(404)
 
 
 @auth_bp.route("/logout", methods=["POST"])  # Assuming POST for logout
 def logout():
+    """Logs out the user by clearing the user cookie."""
     response = make_response(redirect("/login"))
     response.set_cookie("user", "", expires=0)
     return response

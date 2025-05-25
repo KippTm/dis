@@ -1,4 +1,7 @@
+"""Recipe Controller Module."""
+
 from flask import Blueprint, request, jsonify, render_template, abort
+from jinja2 import TemplateNotFound
 from models.recipe import Recipe
 from models.food import Food
 
@@ -7,14 +10,16 @@ recipe_bp = Blueprint("recipe_bp", __name__)
 
 @recipe_bp.route("/new_recipe", methods=["GET"])
 def add_recipe_page():
+    """Renders the new recipe page."""
     try:
         return render_template("new_recipe.html")
-    except:
+    except (FileNotFoundError, TemplateNotFound):
         abort(404)
 
 
 @recipe_bp.route("/new_recipe", methods=["POST"])
 def add_recipe_post():
+    """Handles the submission of a new recipe."""
     user_cookie = request.cookies.get("user")
     if not user_cookie:
         return jsonify({"error": "User not logged in"}), 401
@@ -51,13 +56,13 @@ def add_recipe_post():
         return (
             jsonify(
                 {
-                    "message": "Recipe saved successfully!",  # You can use this or generate on client
+                    "message": "Recipe saved successfully!",
                     "recipe": saved_recipe_details,
                 }
             ),
             200,
         )  # OK
-    except Exception as e:
+    except (FileNotFoundError, TemplateNotFound) as e:
         # Log e for debugging
         print(f"Error in add_recipe_post: {e}")
         return jsonify({"error": "An error occurred while saving the recipe."}), 500
@@ -65,6 +70,7 @@ def add_recipe_post():
 
 @recipe_bp.route("/check-ingredients", methods=["POST"])
 def check_ingredients():
+    """Checks the ingredients and returns suggestions for each ingredient."""
     data = request.json
     ingredient_list_data = data.get("ingredients", [])
     result_list = []
@@ -79,18 +85,20 @@ def check_ingredients():
 
 @recipe_bp.route("/find_recipe")
 def find_recipe_page():
+    """Renders the find recipe page."""
     query_term = request.args.get("query")
     results = []
     if query_term:
         results = Recipe.search_by_name(query_term)
     try:
         return render_template("find.html", results=results, query=query_term)
-    except:
+    except (TemplateNotFound, FileNotFoundError):
         abort(404)
 
 
 @recipe_bp.route("/recipe/<string:author_username>/<string:recipe_name_str>")
 def view_recipe(author_username, recipe_name_str):
+    """Renders the recipe detail page for a specific recipe."""
     # Check if the logged-in user is the author or if recipes are public
     # For now, let's assume any user can view if they have the link.
     # You might want to add authentication/authorization checks here.
@@ -111,6 +119,9 @@ def view_recipe(author_username, recipe_name_str):
 
     try:
         return render_template("recipe_detail.html", recipe=recipe_details)
-    except Exception as e:
+    except (TemplateNotFound, FileNotFoundError) as e:
+        print(f"Error rendering recipe_detail.html: {e}")  # For debugging
+        abort(404)
+    except (ValueError, TypeError) as e:
         print(f"Error rendering recipe_detail.html: {e}")  # For debugging
         abort(500)

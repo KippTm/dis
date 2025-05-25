@@ -1,8 +1,10 @@
+"""Main application file for the recipe site."""
+
 from flask import (
     Flask,
     render_template,
-    abort,
 )
+import jinja2
 from db import db
 
 from controllers.auth_controller import auth_bp
@@ -19,11 +21,11 @@ app.register_blueprint(main_bp)
 
 
 @app.errorhandler(404)
-def page_not_found(e):
-
+def page_not_found(_):
+    """Custom 404 error handler."""
     try:
         return render_template("404.html"), 404
-    except:
+    except (FileNotFoundError, jinja2.exceptions.TemplateNotFound):
         return "Page not found.", 404
 
 

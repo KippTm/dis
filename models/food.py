@@ -1,25 +1,20 @@
-# from sqlalchemy import text
-# from db import db
+"""Food model for managing food items in the database."""
 
-# # in ui when adding a food to a recipe, the user should speficy the amount in grams as well
-# class Food:
-#     def __init__(self, name, amount, emission):
-#         self.name = name
-#         self.db_id = name
-#         self._amount = amount
-#         self._emission = emission
-
-#     def get_exact_emission(self):
-#         amount_in_kg = self._amount / 1000
-#         return self._emission * amount_in_kg
-
-
-from db import db
-from sqlalchemy import text
 import re
+
+from sqlalchemy import text
+from db import db
 
 
 class Food:
+    """Represents a food item in the database."""
+
+    def __init__(self, food_id, name, category, emission):
+        self.food_id = food_id
+        self.name = name
+        self.category = category
+        self.emission = emission
+
     @staticmethod
     def find_id_by_name(name):
         """Finds the food_id for a given ingredient name."""
@@ -49,6 +44,6 @@ class Food:
                 text(fetch_food_query), {"pattern": regex_pattern}
             )
             return [row[0] for row in rows]
-        except Exception as e:
+        except (db.SQLAlchemyError, ValueError) as e:
             print(f"Error fetching ingredient suggestions: {e}")
             return []
