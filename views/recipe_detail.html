@@ -1,0 +1,46 @@
+
+{% extends "base.html" %}
+
+{% block title %}
+    {{ recipe.recipe_name }} - Recipe Details
+{% endblock title %}
+
+{% block meta_description %}
+    View details, ingredients, and CO2 emissions for the recipe: {{ recipe.recipe_name }}.
+{% endblock meta_description %}
+
+{% block content %}
+<div class="bg-white shadow-lg rounded-2xl w-full max-w-3xl p-6 mx-auto mt-4">
+    <a href="{{ url_for('main_bp.profile_page') }}" class="text-sm text-blue-600 hover:underline mb-4 inline-block">&larr; Back to Profile</a>
+
+    <h1 class="text-3xl font-bold text-green-700 mb-2">{{ recipe.recipe_name }}</h1>
+    <p class="text-md text-gray-600 mb-6">By: <span class="font-medium">{{ recipe.author }}</span></p>
+
+    <div class="mb-6">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-3">Ingredients</h2>
+        {% if recipe.ingredients %}
+            <ul class="list-disc list-inside space-y-2 pl-4">
+                {% for ingredient in recipe.ingredients %}
+                    <li class="text-gray-700">
+                        <span class="font-medium">{{ ingredient.name }}</span>: 
+                        {{ ingredient.amount }} {{ ingredient.unit }}
+                        (CO₂: {{ ingredient.co2_emission_per_ingredient }} kg)
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-500 italic">No ingredients listed for this recipe.</p>
+        {% endif %}
+    </div>
+
+    <div>
+        <h2 class="text-2xl font-semibold text-gray-800 mb-3">Total Estimated CO₂ Emission</h2>
+        <p class="text-xl font-bold text-red-600">
+            {{ recipe.total_co2_emission }} kg CO₂e
+        </p>
+        <p class="text-xs text-gray-500 mt-1">
+            (Based on ingredient amounts and estimated emissions per kg of food type. This is an approximation.)
+        </p>
+    </div>
+</div>
+{% endblock content %}

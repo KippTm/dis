@@ -66,3 +66,30 @@ def find_recipe_page():
         return render_template("find.html", results=results, query=query_term)
     except:
         abort(404)
+
+
+@recipe_bp.route("/recipe/<string:author_username>/<string:recipe_name_str>")
+def view_recipe(author_username, recipe_name_str):
+    # Check if the logged-in user is the author or if recipes are public
+    # For now, let's assume any user can view if they have the link.
+    # You might want to add authentication/authorization checks here.
+    # user_cookie = request.cookies.get("user")
+    # if not user_cookie:
+    #     return redirect(url_for('auth_bp.login'))
+    # if user_cookie != author_username:
+    #     # Handle cases where user is trying to view someone else's recipe
+    #     # For now, allow, or you could restrict
+    #     pass
+
+    recipe_details = Recipe.get_recipe_details_with_emissions(
+        author_username, recipe_name_str
+    )
+
+    if not recipe_details:
+        abort(404)  # Recipe not found
+
+    try:
+        return render_template("recipe_detail.html", recipe=recipe_details)
+    except Exception as e:
+        print(f"Error rendering recipe_detail.html: {e}")  # For debugging
+        abort(500)

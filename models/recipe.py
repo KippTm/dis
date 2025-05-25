@@ -1,6 +1,7 @@
 from db import db
 from sqlalchemy import text
 from .food import Food
+from decimal import Decimal
 
 
 class RecipeIngredient:
@@ -92,6 +93,69 @@ class Recipe:
             text(recipe_search_query), {"query": f"%{query_term}%"}
         )
         return [{"name": row[0], "author": row[1]} for row in results]
+
+    @staticmethod
+    def get_recipe_details_with_emissions(author_username, recipe_name_str):
+        """
+        Fetches a recipe's ingredients, their amounts, and calculates CO2 emissions.
+        Assumes Food.emission is kg CO2e / kg of food.
+        Assumes Recipe_Content.amount is in grams.
+        """
+        # First, check if the recipe itself exists
+        recipe_check_query = """
+            SELECT recipe_name, author FROM Recipe
+            WHERE author = :author AND recipe_name = :recipe_name
+        """
+        recipe_info = db.session.execute(
+            text(recipe_check_query),
+            {"author": author_username, "recipe_name": recipe_name_str},
+        ).fetchone()
+
+        if not recipe_info:
+            return None  # Recipe not found
+
+        query = """
+            SELECT
+                rc.recipe_name,
+                rc.recipe_author,
+                f.name AS food_name,
+                rc.amount,
+                f.emission AS food_emission_per_kg,
+                f.category AS food_category
+            FROM Recipe_Content rc
+            JOIN Food f ON rc.food_id = f.food_id
+            WHERE rc.recipe_author = :author AND rc.recipe_name = :recipe_name
+        """
+        results = db.session.execute(
+            text(query), {"author": author_username, "recipe_name": recipe_name_str}
+        ).fetchall()
+
+        ingredients_details = []
+        total_recipe_emission = Decimal("0.0")
+
+        for row in results:
+            amount_grams = Decimal(row[3])  # rc.amount
+            emission_per_kg = Decimal(row[4])  # f.emission
+
+            # Calculate emission for this ingredient: (amount_g / 1000) * emission_kg_co2_per_kg_food
+            ingredient_emission = (amount_grams / Decimal("1000.0")) * emission_per_kg
+            total_recipe_emission += ingredient_emission
+
+            ingredients_details.append(
+                {
+                    "name": row[2],  # food_name
+                    "amount": amount_grams,
+                    "unit": "g",  # Assuming amount is in grams
+                    "co2_emission_per_ingredient": round(ingredient_emission, 4),
+                }
+            )
+
+        return {
+            "recipe_name": recipe_info[0],
+            "author": recipe_info[1],
+            "ingredients": ingredients_details,
+            "total_co2_emission": round(total_recipe_emission, 4),
+        }
 
 
 # from sqlalchemy import text
