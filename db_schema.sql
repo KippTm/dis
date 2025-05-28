@@ -16,7 +16,7 @@ CREATE TABLE Recipe
 	author VARCHAR(50),
 	recipe_name VARCHAR(50),
 	PRIMARY KEY (author, recipe_name),
-	FOREIGN KEY (author) REFERENCES Users(username));/
+	FOREIGN KEY (author) REFERENCES Users(username));
 
 CREATE TABLE Food
 (
