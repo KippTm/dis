@@ -1,4 +1,4 @@
-﻿ID_Ra;Produkt;Kategori;Total kg CO2e/kg
+﻿food_id;name;category;emission
 Ra00001;Peberfrugt;Grøntsager og grøntsagsprodukter;1.07
 Ra00002;Tomat;Grøntsager og grøntsagsprodukter;0.48
 Ra00003;Squash;Grøntsager og grøntsagsprodukter;0.84
