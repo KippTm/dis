@@ -61,3 +61,17 @@ http://127.0.0.1:5000
 ```
 
 This will load the locally running Flask application.
+
+
+# How to interact with the app
+## Creating a user
+- You need a user to interact with the app. You can create one using the register button. Please note that the password needs at least 8 characters.
+## Navigating recipes
+- Once you have a created user, you can login to the website. Here you can see others created recipes, as well as our own
+- You can search recipes on the find recipe button, or add your own using the add recipe button. 
+- The autocomplete/search on the add recipe page matches food-stuff in our database. This means it won't match unless it is exact. Thus sometimes, certain words have to be looked at individually to find the food
+    - An example is "hakket oksekød" resulting in no matches, but "hakket" result in many mince-meats, among them, "hakket oksekød". 
+        - An improvement, albeit significantly more computationally and advanced option would be to use an optimal substring-pattern to match.
+
+
+
