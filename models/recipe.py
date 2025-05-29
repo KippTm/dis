@@ -4,7 +4,20 @@ from decimal import Decimal
 from sqlalchemy import text
 from db import db
 from models.food import Food
+import re
 
+
+def normalize_amount(amount_str):
+    """
+    Normalize amount strings like '12 kg', '500 g' to grams (as an int).
+    """
+    match = re.match(r'^\s*(\d+(?:\.\d+)?)\s*(kg|g)\s*$', amount_str.lower())
+    if not match:
+        raise ValueError(f"Invalid amount format: '{amount_str}'")
+
+    value, unit = match.groups()
+    value = float(value)
+    return int(value * 1000) if unit == "kg" else int(value)
 
 class RecipeIngredient:
     """Represents an ingredient in a recipe with its name, amount, and optional food_id."""
@@ -50,6 +63,12 @@ class Recipe:
 
             # Insert ingredients
             for ing_data in self.ingredients_data:
+                try:
+                    normalized_amount = normalize_amount(ing_data["amount"])
+                except ValueError as e:
+                    print(f"Skipping invalid ingredient amount: {e}")
+                    continue
+
                 food_id = Food.find_id_by_name(ing_data["name"])
                 if food_id:
                     insert_recipe_content_query = """
@@ -62,14 +81,34 @@ class Recipe:
                             "recipe_name": self.recipe_name,
                             "recipe_author": self.author,
                             "food_id": food_id,
-                            "amount": ing_data["amount"],
+                            "amount": normalized_amount,
                         },
                     )
                 else:
+                    print(f"Warning: Food item '{ing_data['name']}' not found. Skipping.")
 
-                    print(
-                        f"Warning: Food item '{ing_data['name']}' not found. Skipping."
-                    )
+            #
+            # for ing_data in self.ingredients_data:
+            #     food_id = Food.find_id_by_name(ing_data["name"])
+            #     if food_id:
+            #         insert_recipe_content_query = """
+            #             INSERT INTO Recipe_Content (recipe_name, recipe_author, food_id, amount)
+            #             VALUES (:recipe_name, :recipe_author, :food_id, :amount)
+            #         """
+            #         db.session.execute(
+            #             text(insert_recipe_content_query),
+            #             {
+            #                 "recipe_name": self.recipe_name,
+            #                 "recipe_author": self.author,
+            #                 "food_id": food_id,
+            #                 "amount": ing_data["amount"],
+            #             },
+            #         )
+            #     else:
+            #
+            #         print(
+            #             f"Warning: Food item '{ing_data['name']}' not found. Skipping."
+            #         )
             db.session.commit()  # Commit the transaction after all operations
             return True
         except Exception as e:
