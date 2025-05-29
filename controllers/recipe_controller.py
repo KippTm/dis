@@ -59,10 +59,20 @@ def add_recipe_post():
             ),
             200,
         )
-    except (FileNotFoundError, TemplateNotFound) as e:
-
+    except ValueError as ve:  # Catch specific ValueErrors from recipe.save()
+        return jsonify({"error": str(ve)}), 400  # Return 400 Bad Request
+    except (RuntimeError, OSError, TypeError, AttributeError) as e:
+        # Log the full error for server-side debugging
         print(f"Error in add_recipe_post: {e}")
-        return jsonify({"error": "An error occurred while saving the recipe."}), 500
+        # Return a generic error message to the client
+        return (
+            jsonify(
+                {
+                    "error": "An error occurred while saving the recipe. Please try again."
+                }
+            ),
+            500,
+        )
 
 
 @recipe_bp.route("/check-ingredients", methods=["POST"])
@@ -103,11 +113,6 @@ def find_recipe_page():
         effective_sort_emission = (
             sort_emission if sort_emission in ["lowest", "highest"] else None
         )
-
-        # if selected_category_from_form == "" and not sort_emission:
-        #     effective_query_term = ""
-        # elif selected_category_from_form == "" and sort_emission:
-        #     pass
 
         found_recipes = Recipe.search_recipes(
             query_term=effective_query_term,

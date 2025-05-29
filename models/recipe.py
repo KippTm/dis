@@ -11,13 +11,16 @@ def normalize_amount(amount_str):
     """
     Normalize amount strings like '12 kg', '500 g' to grams (as an int).
     """
-    match = re.match(r'^\s*(\d+(?:\.\d+)?)\s*(kg|g)\s*$', amount_str.lower())
+    match = re.match(r"^\s*((?:\d+)?(?:\.\d+)?)\s*(kg|g)?\s*$", amount_str.lower())
     if not match:
-        raise ValueError(f"Invalid amount format: '{amount_str}'")
+        raise ValueError(
+            f"Invalid amount format: '{amount_str}'. Expected format like '12 kg' or '500 g'."
+        )
 
     value, unit = match.groups()
     value = float(value)
     return int(value * 1000) if unit == "kg" else int(value)
+
 
 class RecipeIngredient:
     """Represents an ingredient in a recipe with its name, amount, and optional food_id."""
@@ -66,8 +69,11 @@ class Recipe:
                 try:
                     normalized_amount = normalize_amount(ing_data["amount"])
                 except ValueError as e:
-                    print(f"Skipping invalid ingredient amount: {e}")
-                    continue
+                    db.session.rollback()  # Rollback before raising
+                    # Re-raise the error with context about which ingredient failed
+                    raise ValueError(
+                        f"Invalid amount for ingredient '{ing_data.get('name', 'Unknown')}': {str(e)}"
+                    ) from e
 
                 food_id = Food.find_id_by_name(ing_data["name"])
                 if food_id:
@@ -85,37 +91,25 @@ class Recipe:
                         },
                     )
                 else:
-                    print(f"Warning: Food item '{ing_data['name']}' not found. Skipping.")
+                    db.session.rollback()
+                    raise ValueError(
+                        f"Food item '{ing_data['name']}' not found in database. Cannot save recipe."
+                    )
 
-            #
-            # for ing_data in self.ingredients_data:
-            #     food_id = Food.find_id_by_name(ing_data["name"])
-            #     if food_id:
-            #         insert_recipe_content_query = """
-            #             INSERT INTO Recipe_Content (recipe_name, recipe_author, food_id, amount)
-            #             VALUES (:recipe_name, :recipe_author, :food_id, :amount)
-            #         """
-            #         db.session.execute(
-            #             text(insert_recipe_content_query),
-            #             {
-            #                 "recipe_name": self.recipe_name,
-            #                 "recipe_author": self.author,
-            #                 "food_id": food_id,
-            #                 "amount": ing_data["amount"],
-            #             },
-            #         )
-            #     else:
-            #
-            #         print(
-            #             f"Warning: Food item '{ing_data['name']}' not found. Skipping."
-            #         )
             db.session.commit()  # Commit the transaction after all operations
             return True
+        except (
+            ValueError
+        ) as ve:  # Catch ValueErrors from normalization or food not found
+            db.session.rollback()  # Ensure rollback if not already done
+            raise ve  # Re-raise for the controller
         except Exception as e:
-            db.session.rollback()  # Rollback in case of any error
-            print(f"Error saving recipe: {str(e)}")
-
-            raise e
+            db.session.rollback()
+            print(f"Error saving recipe: {str(e)}")  # Log original error
+            # Raise a more generic error for the controller
+            raise RuntimeError(
+                "An unexpected error occurred while saving the recipe."
+            ) from e
 
     @staticmethod
     def get_recipes_by_author(author_username):
