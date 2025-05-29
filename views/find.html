@@ -62,6 +62,24 @@
             }
         }
     });
+    // Automatically submit form when sort order or category changes
+    document.addEventListener('DOMContentLoaded', function() {
+        const sortEmissionSelect = document.getElementById('sort_emission');
+        const categorySelect = document.getElementById('category'); // Get the category dropdown
+        const findRecipeForm = document.getElementById('find-recipe-form');
+
+        if (sortEmissionSelect && findRecipeForm) {
+            sortEmissionSelect.addEventListener('change', function() {
+                findRecipeForm.submit();
+            });
+        }
+
+        if (categorySelect && findRecipeForm) { // Add listener for category dropdown
+            categorySelect.addEventListener('change', function() {
+                findRecipeForm.submit();
+            });
+        }
+    });
     </script>
 {% endblock head_extra %}
 {% block content %}
