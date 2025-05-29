@@ -72,6 +72,7 @@ This will load the locally running Flask application.
 - The autocomplete/search on the add recipe page matches food-stuff in our database. This means it won't match unless it is exact. Thus sometimes, certain words have to be looked at individually to find the food
     - An example is "hakket oksekød" resulting in no matches, but "hakket" result in many mince-meats, among them, "hakket oksekød". 
         - An improvement, albeit significantly more computationally and advanced option would be to use an optimal substring-pattern to match.
+- Note that "kg" is matched using regex to automatically convert to 1000 gram - e.g. wirting 2kg will be converted to 2000g
 
 
 
