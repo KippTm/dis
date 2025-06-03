@@ -35,6 +35,9 @@ Run the setup script to:
 - Import food data
 - Populate sample recipes
 
+__NB!__ The web app expects a user on the Postgres instance with the username "postgres" and no password, running on local host. Please ensure this user and database instance on local host is present. Alternatively, modify the "SQLALCHEMY\_DATABASE\_URI" value in app.py
+
+
 ```bash
 ./import_data.sh
 ```
